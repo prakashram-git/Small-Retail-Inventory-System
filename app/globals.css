@@ -11,6 +11,8 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 body {
@@ -95,4 +97,35 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
+}
+
+/* Mobile Touch Optimization */
+button, a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure buttons are touch-friendly on mobile */
+button, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Prevent font size zoom on iOS input focus */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* Mobile-friendly scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
 }
