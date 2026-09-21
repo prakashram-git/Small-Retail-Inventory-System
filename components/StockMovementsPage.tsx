@@ -137,45 +137,33 @@ export default function StockMovementsPage() {
       </div>
 
       {/* Current Inventory Section */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Package className="w-5 h-5 text-gray-900 dark:text-white" />
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Current Inventory</h2>
-          <span className="text-sm text-gray-600 dark:text-gray-400">({products.length} items)</span>
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Package className="w-4 h-4 text-gray-900 dark:text-white" />
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Current Inventory</h2>
+          <span className="text-2xs text-gray-600 dark:text-gray-400">({products.length} items)</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1">
           {products.map((product) => (
-            <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
-              <div className="flex justify-between items-start mb-2">
+            <div key={product.id} className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-1">
+              <p className="font-mono text-2xs font-bold text-gray-600 dark:text-gray-400 truncate" style={{ fontSize: '70%' }}>{product.sku}</p>
+              <p className="text-2xs font-semibold text-gray-900 dark:text-white truncate" style={{ fontSize: '70%' }}>{product.name}</p>
+              <div className="grid grid-cols-2 gap-0.5 text-2xs mt-0.5">
                 <div>
-                  <p className="font-mono text-xs font-bold text-gray-600 dark:text-gray-400">{product.sku}</p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{product.name}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">Stock:</span>
-                  <p className="font-bold text-gray-900 dark:text-white">{product.currentStock}</p>
+                  <span className="text-gray-600 dark:text-gray-400 text-2xs" style={{ fontSize: '65%' }}>Stock:</span>
+                  <p className="font-bold text-gray-900 dark:text-white text-2xs" style={{ fontSize: '70%' }}>{product.currentStock}</p>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400">Reorder:</span>
-                  <p className="font-bold text-gray-900 dark:text-white">{product.reorderLevel}</p>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">Unit Price:</span>
-                  <p className="font-bold text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</p>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">Total Value:</span>
-                  <p className="font-bold text-green-600 dark:text-green-400">{formatCurrency(product.currentStock * product.unitPrice)}</p>
+                  <span className="text-gray-600 dark:text-gray-400 text-2xs" style={{ fontSize: '65%' }}>Price:</span>
+                  <p className="font-bold text-green-600 dark:text-green-400 text-2xs" style={{ fontSize: '70%' }}>{formatCurrency(product.unitPrice)}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
         {products.length === 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-center">
-            <p className="text-gray-500 dark:text-gray-400">No products in inventory</p>
+          <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">No products in inventory</p>
           </div>
         )}
       </div>
