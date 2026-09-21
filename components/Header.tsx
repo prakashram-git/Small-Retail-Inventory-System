@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Bell, Settings, ChevronDown, ShoppingCart, BarChart3, Moon, Sun } from 'lucide-react';
 import { useInventoryStore } from '@/lib/store';
@@ -76,7 +76,7 @@ export default function Header() {
             {/* Settings */}
             <button
               onClick={() => setShowSettings(true)}
-              className="p-1.5 sm:p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+              className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
             >
               <Settings className="w-5 sm:w-6 h-5 sm:h-6" />
             </button>
@@ -85,7 +85,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 rounded-lg transition"
+                className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
               >
                 <div className="w-8 sm:w-10 h-8 sm:h-10 bg-brand-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                   A
@@ -97,15 +97,15 @@ export default function Header() {
               </button>
 
               {showUserMenu && (
-                <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48">
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 text-sm">
+                <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-48">
+                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200">
                     Profile
                   </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 text-sm">
+                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200">
                     Settings
                   </a>
-                  <hr className="my-2" />
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 text-sm text-red-600">
+                  <hr className="my-2 border-gray-200 dark:border-gray-700" />
+                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-red-600 dark:text-red-400">
                     Logout
                   </a>
                 </div>
@@ -120,7 +120,7 @@ export default function Header() {
         <div className="px-3 sm:px-4 md:px-6 py-2 md:py-3 flex items-center gap-2">
           <BarChart3 className="w-4 sm:w-5 h-4 sm:h-5 text-brand-primary flex-shrink-0" />
           <p className="text-xs sm:text-sm font-medium text-brand-primary truncate">
-            Inventory Dashboard - {mounted ? settings.shopLocation : 'Singapore Central Mall'}
+            Inventory Dashboard - {settings.shopLocation}
           </p>
         </div>
       </div>
