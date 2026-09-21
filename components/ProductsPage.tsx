@@ -1,19 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, Upload } from 'lucide-react';
+import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
-
-interface Product {
-  id: string;
-  sku: string;
-  cost: number;
-  sellingPrice: number;
-  currentStock: number;
-  reorderLevel: number;
-  name: string;
-  category: string;
-}
 
 const CATEGORIES = [
   'Confectionery',
@@ -40,45 +30,17 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'Health & Beauty': ['shampoo', 'soap', 'lotion', 'cream', 'makeup', 'toothpaste'],
 };
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    sku: 'CHOC-001',
-    name: 'Dark Chocolate Bar',
-    category: 'Confectionery',
-    cost: 2.50,
-    sellingPrice: 4.50,
-    currentStock: 12,
-    reorderLevel: 50,
-  },
-  {
-    id: '2',
-    sku: 'BEVER-001',
-    name: 'Orange Juice (1L)',
-    category: 'Beverages',
-    cost: 1.80,
-    sellingPrice: 3.20,
-    currentStock: 28,
-    reorderLevel: 60,
-  },
-  {
-    id: '3',
-    sku: 'SNACK-001',
-    name: 'Potato Chips (200g)',
-    category: 'Snacks',
-    cost: 1.50,
-    sellingPrice: 2.80,
-    currentStock: 45,
-    reorderLevel: 80,
-  },
-];
-
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const products = useInventoryStore((state) => state.products);
+  const addProduct = useInventoryStore((state) => state.addProduct);
+  const editProduct = useInventoryStore((state) => state.editProduct);
+  const deleteProduct = useInventoryStore((state) => state.deleteProduct);
+
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showImport, setShowImport] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     sku: '',
@@ -89,6 +51,10 @@ export default function ProductsPage() {
     currentStock: '',
     reorderLevel: '',
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Generate SKU automatically
   const generateSKU = () => {
@@ -120,39 +86,29 @@ export default function ProductsPage() {
 
     // Use provided SKU or generate one
     const sku = formData.sku || generateSKU();
-
     const category = formData.category || detectCategory(formData.name);
 
     if (editingId) {
-      setProducts(
-        products.map((p) =>
-          p.id === editingId
-            ? {
-                ...p,
-                sku: sku,
-                name: formData.name,
-                category: category,
-                cost: parseFloat(formData.cost),
-                sellingPrice: parseFloat(formData.sellingPrice),
-                currentStock: parseInt(formData.currentStock) || 0,
-                reorderLevel: parseInt(formData.reorderLevel) || 0,
-              }
-            : p
-        )
-      );
-      setEditingId(null);
-    } else {
-      const newProduct: Product = {
-        id: `prod-${Date.now()}`,
-        sku: sku,
+      editProduct(editingId, {
+        sku,
         name: formData.name,
-        category: category,
+        category,
         cost: parseFloat(formData.cost),
-        sellingPrice: parseFloat(formData.sellingPrice),
+        unitPrice: parseFloat(formData.sellingPrice),
         currentStock: parseInt(formData.currentStock) || 0,
         reorderLevel: parseInt(formData.reorderLevel) || 0,
-      };
-      setProducts([...products, newProduct]);
+      });
+      setEditingId(null);
+    } else {
+      addProduct({
+        sku,
+        name: formData.name,
+        category,
+        cost: parseFloat(formData.cost),
+        unitPrice: parseFloat(formData.sellingPrice),
+        currentStock: parseInt(formData.currentStock) || 0,
+        reorderLevel: parseInt(formData.reorderLevel) || 0,
+      });
     }
 
     setFormData({
@@ -184,7 +140,7 @@ export default function ProductsPage() {
         }
 
         const headers = lines[0].split(',').map((h) => h.trim().toLowerCase());
-        const newProducts: Product[] = [];
+        let importCount = 0;
 
         for (let i = 1; i < lines.length; i++) {
           const values = lines[i].split(',').map((v) => v.trim());
@@ -208,22 +164,20 @@ export default function ProductsPage() {
           const sku = values[skuIndex] || generateSKU();
           const category = values[categoryIndex] || detectCategory(name);
 
-          const product: Product = {
-            id: `prod-${Date.now()}-${i}`,
+          addProduct({
             sku: sku,
             name: name,
             category: category,
             cost: parseFloat(values[costIndex]) || 0,
-            sellingPrice: parseFloat(values[priceIndex]) || 0,
+            unitPrice: parseFloat(values[priceIndex]) || 0,
             currentStock: stockIndex !== -1 ? parseInt(values[stockIndex]) || 0 : 0,
             reorderLevel: reorderIndex !== -1 ? parseInt(values[reorderIndex]) || 0 : 0,
-          };
+          });
 
-          newProducts.push(product);
+          importCount++;
         }
 
-        setProducts([...products, ...newProducts]);
-        alert(`Successfully imported ${newProducts.length} products!`);
+        alert(`Successfully imported ${importCount} products!`);
         setShowImport(false);
       } catch (error) {
         alert('Error parsing CSV file. Please check the format.');
@@ -238,13 +192,13 @@ export default function ProductsPage() {
     }
   };
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = (product: any) => {
     setFormData({
       sku: product.sku,
       name: product.name,
       category: product.category,
       cost: product.cost.toString(),
-      sellingPrice: product.sellingPrice.toString(),
+      sellingPrice: product.unitPrice.toString(),
       currentStock: product.currentStock.toString(),
       reorderLevel: product.reorderLevel.toString(),
     });
@@ -253,8 +207,8 @@ export default function ProductsPage() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure?')) {
-      setProducts(products.filter((p) => p.id !== id));
+    if (confirm('Are you sure you want to delete this product?')) {
+      deleteProduct(id);
     }
   };
 
@@ -280,6 +234,8 @@ export default function ProductsPage() {
     if (cost === 0) return 0;
     return parseFloat(((sellingPrice - cost) / sellingPrice * 100).toFixed(1));
   };
+
+  if (!mounted) return null;
 
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
@@ -320,13 +276,13 @@ export default function ProductsPage() {
       {/* CSV Import Modal */}
       {showImport && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Import Products from CSV</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Import Products from CSV</h2>
             </div>
 
             <div className="p-6 space-y-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Upload a CSV file with columns: Name, Cost, Selling Price (required). Optional: SKU, Category, Stock, Reorder Level
               </p>
 
@@ -367,9 +323,9 @@ export default function ProductsPage() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-            <div className="sticky top-0 px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div className="sticky top-0 px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {editingId ? 'Edit Product' : 'Add Product'}
               </h2>
             </div>
@@ -377,7 +333,7 @@ export default function ProductsPage() {
             <div className="p-6 space-y-4">
               {/* SKU */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                   SKU (Optional - auto-generated if empty)
                 </label>
                 <input
@@ -385,16 +341,16 @@ export default function ProductsPage() {
                   value={formData.sku}
                   onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                   placeholder={`Leave empty for auto: ${generateSKU()}`}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {formData.sku ? `Your SKU: ${formData.sku}` : `Auto-generated SKU: ${generateSKU()}`}
                 </p>
               </div>
 
               {/* Product Name */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                   Product Name *
                 </label>
                 <input
@@ -409,19 +365,19 @@ export default function ProductsPage() {
                     });
                   }}
                   placeholder="e.g., Dark Chocolate Bar"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                   Category (Auto-filled based on product name)
                 </label>
                 <select
                   value={formData.category || detectCategory(formData.name)}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <option value="">Select a category</option>
                   {CATEGORIES.map((cat) => (
@@ -431,7 +387,7 @@ export default function ProductsPage() {
                   ))}
                 </select>
                 {detectCategory(formData.name) && !formData.category && (
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
                     💡 Suggested: {detectCategory(formData.name)}
                   </p>
                 )}
@@ -440,7 +396,7 @@ export default function ProductsPage() {
               {/* Two Column - Cost & Selling Price */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-1">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                     Cost Price *
                   </label>
                   <input
@@ -450,11 +406,11 @@ export default function ProductsPage() {
                     placeholder="0.00"
                     step="0.01"
                     min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-1">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                     Selling Price *
                   </label>
                   <input
@@ -464,7 +420,7 @@ export default function ProductsPage() {
                     placeholder="0.00"
                     step="0.01"
                     min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
               </div>
@@ -472,7 +428,7 @@ export default function ProductsPage() {
               {/* Two Column - Current Stock & Reorder Level */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-1">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                     Current Stock
                   </label>
                   <input
@@ -481,11 +437,11 @@ export default function ProductsPage() {
                     onChange={(e) => setFormData({ ...formData, currentStock: e.target.value })}
                     placeholder="0"
                     min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-1">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">
                     Reorder Level
                   </label>
                   <input
@@ -494,16 +450,16 @@ export default function ProductsPage() {
                     onChange={(e) => setFormData({ ...formData, reorderLevel: e.target.value })}
                     placeholder="0"
                     min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="sticky bottom-0 px-6 py-4 border-t border-gray-200 bg-gray-50 flex gap-3">
+            <div className="sticky bottom-0 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex gap-3">
               <button
                 onClick={handleCancel}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition font-medium"
               >
                 Cancel
               </button>
@@ -519,31 +475,31 @@ export default function ProductsPage() {
       )}
 
       {/* Products Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">SKU</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Product Name</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Category</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Cost</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Selling Price</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Profit</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Margin %</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Stock</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Reorder</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Actions</th>
+              <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">SKU</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Product Name</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Category</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Cost</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Selling Price</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Profit</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Margin %</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Stock</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Reorder</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredProducts.map((product, index) => (
-                <tr key={product.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr key={product.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/50'}>
                   <td className="px-4 py-3">
-                    <span className="font-mono text-sm font-semibold text-gray-900">{product.sku}</span>
+                    <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-200">{product.sku}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-gray-900">{product.name}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-200">{product.name}</p>
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded">
@@ -551,50 +507,50 @@ export default function ProductsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-200">
                       {formatCurrency(product.cost)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {formatCurrency(product.sellingPrice)}
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-200">
+                      {formatCurrency(product.unitPrice)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(calculateProfit(product.cost, product.sellingPrice))}
+                    <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                      +{formatCurrency(calculateProfit(product.cost, product.unitPrice))}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-sm font-semibold text-blue-600">
-                      {calculateMargin(product.cost, product.sellingPrice)}%
+                    <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                      {calculateMargin(product.cost, product.unitPrice)}%
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span
                       className={`text-sm font-semibold px-2 py-1 rounded ${
                         product.currentStock <= product.reorderLevel
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-green-100 text-green-700'
+                          ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                          : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                       }`}
                     >
                       {product.currentStock}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className="text-sm text-gray-600">{product.reorderLevel}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{product.reorderLevel}</span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={() => handleEdit(product)}
-                        className="p-1 text-blue-600 hover:bg-blue-50 rounded transition"
+                        className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="p-1 text-red-600 hover:bg-red-50 rounded transition"
+                        className="p-1 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -608,7 +564,7 @@ export default function ProductsPage() {
 
         {filteredProducts.length === 0 && (
           <div className="px-6 py-12 text-center">
-            <p className="text-gray-500">No products found. Start by adding a new product!</p>
+            <p className="text-gray-500 dark:text-gray-400">No products found. Start by adding a new product!</p>
           </div>
         )}
       </div>
@@ -623,7 +579,7 @@ export default function ProductsPage() {
           <p className="text-xs text-gray-600 dark:text-gray-400">Total Stock Value</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
             {formatCurrency(
-              products.reduce((sum, p) => sum + p.sellingPrice * p.currentStock, 0)
+              products.reduce((sum, p) => sum + p.unitPrice * p.currentStock, 0)
             )}
           </p>
         </div>

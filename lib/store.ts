@@ -19,6 +19,9 @@ interface InventoryState {
   getRecentMovements: (limit?: number) => StockMovement[];
   createStocktakeAdjustment: (productId: string, countedQuantity: number) => void;
   updateNotificationBadge: () => void;
+  addProduct: (product: Omit<Product, 'id'>) => void;
+  editProduct: (productId: string, updates: Partial<Omit<Product, 'id'>>) => void;
+  deleteProduct: (productId: string) => void;
 }
 
 export const useInventoryStore = create<InventoryState>((set, get) => ({
@@ -114,5 +117,32 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
   updateNotificationBadge: () => {
     const lowStockCount = get().getLowStockItems().length;
     set({ notificationBadge: lowStockCount });
+  },
+
+  addProduct: (product) => {
+    const newProduct: Product = {
+      ...product,
+      id: `prod-${Date.now()}`,
+    };
+    set((state) => ({
+      products: [...state.products, newProduct],
+    }));
+    get().addToast(`Product added: ${product.name}`, 'success');
+  },
+
+  editProduct: (productId, updates) => {
+    set((state) => ({
+      products: state.products.map((p) =>
+        p.id === productId ? { ...p, ...updates } : p
+      ),
+    }));
+    get().addToast('Product updated successfully', 'success');
+  },
+
+  deleteProduct: (productId) => {
+    set((state) => ({
+      products: state.products.filter((p) => p.id !== productId),
+    }));
+    get().addToast('Product deleted successfully', 'success');
   },
 }));

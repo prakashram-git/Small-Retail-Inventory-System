@@ -5,6 +5,7 @@ export interface Product {
   currentStock: number;
   reorderLevel: number;
   unitPrice: number;
+  cost: number;
   category: string;
 }
 
