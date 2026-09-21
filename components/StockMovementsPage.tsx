@@ -1,127 +1,54 @@
 'use client';
 
-import { useState } from 'react';
-import { Plus, Search, Download, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Search, Trash2, Package } from 'lucide-react';
+import { useInventoryStore } from '@/lib/store';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
-interface Movement {
-  id: string;
-  date: Date;
-  sku: string;
-  productName: string;
-  type: 'purchase' | 'sale' | 'adjustment';
-  quantity: number;
-  notes: string;
-  amount?: number;
-  supplier?: string;
-  user: string;
-}
-
-const MOCK_MOVEMENTS: Movement[] = [
-  {
-    id: '1',
-    date: new Date(Date.now() - 2 * 60 * 60 * 1000),
-    sku: 'CHOC-001',
-    productName: 'Dark Chocolate Bar',
-    type: 'sale',
-    quantity: -8,
-    notes: 'Customer purchase',
-    amount: 36,
-    user: 'Alex',
-  },
-  {
-    id: '2',
-    date: new Date(Date.now() - 4 * 60 * 60 * 1000),
-    sku: 'BEVER-001',
-    productName: 'Orange Juice (1L)',
-    type: 'purchase',
-    quantity: 50,
-    notes: 'Supplier: Fresh Beverages Inc.',
-    amount: 90,
-    supplier: 'Fresh Beverages',
-    user: 'Manager',
-  },
-  {
-    id: '3',
-    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    sku: 'SNACK-001',
-    productName: 'Potato Chips (200g)',
-    type: 'adjustment',
-    quantity: -3,
-    notes: 'Damaged units removed',
-    user: 'Alex',
-  },
-];
-
 export default function StockMovementsPage() {
-  const [movements, setMovements] = useState<Movement[]>(MOCK_MOVEMENTS);
+  const products = useInventoryStore((state) => state.products);
+  const movements = useInventoryStore((state) => state.movements);
+  const updateStock = useInventoryStore((state) => state.updateStock);
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'purchase' | 'sale' | 'adjustment'>('all');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    sku: '',
-    productName: '',
+    productId: '',
     type: 'purchase' as 'purchase' | 'sale' | 'adjustment',
     quantity: '',
     notes: '',
-    supplier: '',
   });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filteredMovements = movements.filter((m) => {
+    const product = products.find((p) => p.id === m.productId);
     const matchesSearch =
-      m.sku.toLowerCase().includes(search.toLowerCase()) ||
-      m.productName.toLowerCase().includes(search.toLowerCase());
+      (product?.sku.toLowerCase().includes(search.toLowerCase())) ||
+      (product?.name.toLowerCase().includes(search.toLowerCase()));
     const matchesType = filterType === 'all' || m.type === filterType;
     return matchesSearch && matchesType;
   });
 
   const handleAdd = () => {
-    if (!formData.sku || !formData.productName || !formData.quantity) {
+    if (!formData.productId || !formData.quantity) {
       alert('Please fill required fields');
       return;
     }
 
-    const newMovement: Movement = {
-      id: `mov-${Date.now()}`,
-      date: new Date(),
-      sku: formData.sku,
-      productName: formData.productName,
-      type: formData.type,
-      quantity: parseInt(formData.quantity) * (formData.type === 'sale' ? -1 : 1),
-      notes: formData.notes,
-      supplier: formData.supplier,
-      user: 'Current User',
-    };
+    const quantity = parseInt(formData.quantity);
+    updateStock(formData.productId, quantity, formData.type, formData.notes);
 
-    setMovements([newMovement, ...movements]);
     setFormData({
-      sku: '',
-      productName: '',
+      productId: '',
       type: 'purchase',
       quantity: '',
       notes: '',
-      supplier: '',
     });
     setShowForm(false);
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Delete this movement?')) {
-      setMovements(movements.filter((m) => m.id !== id));
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'purchase':
-        return 'bg-green-100 text-green-700';
-      case 'sale':
-        return 'bg-red-100 text-red-700';
-      case 'adjustment':
-        return 'bg-yellow-100 text-yellow-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
   };
 
   const getTotals = () => {
@@ -134,6 +61,21 @@ export default function StockMovementsPage() {
 
   const totals = getTotals();
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'purchase':
+        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400';
+      case 'sale':
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400';
+      case 'adjustment':
+        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400';
+      default:
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
+    }
+  };
+
+  if (!mounted) return null;
+
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
       {/* Header */}
@@ -145,19 +87,19 @@ export default function StockMovementsPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Purchases</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Total Purchases</p>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">{totals.purchases}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units added</p>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Sales</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Total Sales</p>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">{totals.sales}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units sold</p>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Adjustments</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">Total Adjustments</p>
           <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">{totals.adjustments}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units adjusted</p>
         </div>
       </div>
 
@@ -194,35 +136,73 @@ export default function StockMovementsPage() {
         </button>
       </div>
 
+      {/* Current Inventory Section */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Package className="w-5 h-5 text-gray-900 dark:text-white" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Current Inventory</h2>
+          <span className="text-sm text-gray-600 dark:text-gray-400">({products.length} items)</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {products.map((product) => (
+            <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="font-mono text-xs font-bold text-gray-600 dark:text-gray-400">{product.sku}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{product.name}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Stock:</span>
+                  <p className="font-bold text-gray-900 dark:text-white">{product.currentStock}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Reorder:</span>
+                  <p className="font-bold text-gray-900 dark:text-white">{product.reorderLevel}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Unit Price:</span>
+                  <p className="font-bold text-gray-900 dark:text-white">{formatCurrency(product.unitPrice)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600 dark:text-gray-400">Total Value:</span>
+                  <p className="font-bold text-green-600 dark:text-green-400">{formatCurrency(product.currentStock * product.unitPrice)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {products.length === 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400">No products in inventory</p>
+          </div>
+        )}
+      </div>
+
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full my-8">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Log Stock Movement</h2>
             </div>
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">SKU *</label>
-                <input
-                  type="text"
-                  value={formData.sku}
-                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                  placeholder="e.g., CHOC-001"
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Product *</label>
+                <select
+                  value={formData.productId}
+                  onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Product Name *</label>
-                <input
-                  type="text"
-                  value={formData.productName}
-                  onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
-                  placeholder="e.g., Dark Chocolate Bar"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                />
+                >
+                  <option value="">Select a product...</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.sku} - {p.name} (Stock: {p.currentStock})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -250,25 +230,12 @@ export default function StockMovementsPage() {
                 />
               </div>
 
-              {formData.type === 'purchase' && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Supplier</label>
-                  <input
-                    type="text"
-                    value={formData.supplier}
-                    onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
-                    placeholder="Supplier name"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                  />
-                </div>
-              )}
-
               <div>
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Notes</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="e.g., Reason for adjustment"
+                  placeholder="e.g., Reason for movement"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                   rows={2}
                 />
@@ -305,44 +272,38 @@ export default function StockMovementsPage() {
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Type</th>
                 <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Quantity</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Notes</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredMovements.map((movement, index) => (
-                <tr key={movement.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/50'}>
-                  <td className="px-4 py-3">
-                    <span className="text-sm text-gray-900 dark:text-gray-200">{formatDate(movement.date)}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-200">{movement.sku}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="text-sm text-gray-900 dark:text-gray-200">{movement.productName}</p>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getTypeColor(movement.type)}`}>
-                      {movement.type.charAt(0).toUpperCase() + movement.type.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <span className={`text-sm font-bold ${movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                      {movement.quantity > 0 ? '+' : ''}{movement.quantity}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{movement.notes}</p>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => handleDelete(movement.id)}
-                      className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {filteredMovements.map((movement, index) => {
+                const product = products.find((p) => p.id === movement.productId);
+                return (
+                  <tr key={movement.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/50'}>
+                    <td className="px-4 py-3">
+                      <span className="text-sm text-gray-900 dark:text-gray-200">{formatDate(movement.timestamp)}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-200">{product?.sku || 'N/A'}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="text-sm text-gray-900 dark:text-gray-200">{product?.name || 'Unknown'}</p>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getTypeColor(movement.type)}`}>
+                        {movement.type.charAt(0).toUpperCase() + movement.type.slice(1)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span className={`text-sm font-bold ${movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {movement.quantity > 0 ? '+' : ''}{movement.quantity}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{movement.notes}</p>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
