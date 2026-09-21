@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, ReactNode } from 'react';
+import { useEffect, ReactNode } from 'react';
 import { useSettingsStore } from '@/lib/settings-store';
 
 interface ThemeProviderProps {
@@ -8,23 +8,19 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  const [mounted, setMounted] = useState(false);
   const { settings } = useSettingsStore();
 
-  // Apply dark mode to html element
+  // Apply dark mode to html element - runs on mount and when settings change
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
     const htmlElement = document.documentElement;
-    if (settings.darkMode) {
+    const isDarkMode = settings.darkMode;
+
+    if (isDarkMode) {
       htmlElement.classList.add('dark');
     } else {
       htmlElement.classList.remove('dark');
     }
-  }, [settings.darkMode, mounted]);
+  }, [settings.darkMode]);
 
   return <>{children}</>;
 }
