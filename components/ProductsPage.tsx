@@ -253,6 +253,14 @@ export default function ProductsPage() {
 
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
+      {/* Debug Info - Product Count */}
+      <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
+        <p className="text-sm font-mono text-blue-900 dark:text-blue-300">
+          Total Products in Store: <span className="font-bold">{products.length}</span> |
+          Search Results: <span className="font-bold">{filteredProducts.length}</span>
+        </p>
+      </div>
+
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Products</h1>
