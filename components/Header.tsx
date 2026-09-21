@@ -11,13 +11,8 @@ export default function Header() {
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const { settings, toggleDarkMode } = useSettingsStore();
   const notificationBadge = useInventoryStore((state) => state.notificationBadge);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true;
@@ -36,17 +31,8 @@ export default function Header() {
               <ShoppingCart className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
             </div>
             <div>
-              {mounted ? (
-                <>
-                  <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">{settings.brandName.split(' ')[0]}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{settings.brandName.split(' ').slice(1).join(' ')}</p>
-                </>
-              ) : (
-                <>
-                  <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">RedHill</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Inventory</p>
-                </>
-              )}
+              <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">{settings.brandName.split(' ')[0]}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{settings.brandName.split(' ').slice(1).join(' ')}</p>
             </div>
           </div>
 
@@ -75,19 +61,17 @@ export default function Header() {
             </div>
 
             {/* Theme Toggle */}
-            {mounted && (
-              <button
-                onClick={() => toggleDarkMode()}
-                className="p-1.5 sm:p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                title={settings.darkMode ? 'Light Mode' : 'Dark Mode'}
-              >
-                {settings.darkMode ? (
-                  <Sun className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-500" />
-                ) : (
-                  <Moon className="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600" />
-                )}
-              </button>
-            )}
+            <button
+              onClick={() => toggleDarkMode()}
+              className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+              title={settings.darkMode ? 'Light Mode' : 'Dark Mode'}
+            >
+              {settings.darkMode ? (
+                <Sun className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-500" />
+              ) : (
+                <Moon className="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600" />
+              )}
+            </button>
 
             {/* Settings */}
             <button
