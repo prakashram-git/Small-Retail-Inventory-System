@@ -80,47 +80,61 @@ export default function ProductsPage() {
 
   const handleAdd = () => {
     if (!formData.name || !formData.cost || !formData.sellingPrice) {
-      alert('Please fill all required fields');
+      alert('Please fill all required fields: Name, Cost, and Selling Price');
       return;
     }
 
-    // Use provided SKU or generate one
-    const sku = formData.sku || generateSKU();
-    const category = formData.category || detectCategory(formData.name);
+    try {
+      // Use provided SKU or generate one
+      const sku = formData.sku || generateSKU();
+      const category = formData.category || detectCategory(formData.name);
+      const cost = parseFloat(formData.cost);
+      const unitPrice = parseFloat(formData.sellingPrice);
+      const currentStock = parseInt(formData.currentStock) || 0;
+      const reorderLevel = parseInt(formData.reorderLevel) || 0;
 
-    if (editingId) {
-      editProduct(editingId, {
-        sku,
-        name: formData.name,
-        category,
-        cost: parseFloat(formData.cost),
-        unitPrice: parseFloat(formData.sellingPrice),
-        currentStock: parseInt(formData.currentStock) || 0,
-        reorderLevel: parseInt(formData.reorderLevel) || 0,
+      if (isNaN(cost) || isNaN(unitPrice)) {
+        alert('Cost and Selling Price must be valid numbers');
+        return;
+      }
+
+      if (editingId) {
+        editProduct(editingId, {
+          sku,
+          name: formData.name,
+          category,
+          cost,
+          unitPrice,
+          currentStock,
+          reorderLevel,
+        });
+        setEditingId(null);
+      } else {
+        addProduct({
+          sku,
+          name: formData.name,
+          category,
+          cost,
+          unitPrice,
+          currentStock,
+          reorderLevel,
+        });
+      }
+
+      setFormData({
+        sku: '',
+        name: '',
+        category: '',
+        cost: '',
+        sellingPrice: '',
+        currentStock: '',
+        reorderLevel: '',
       });
-      setEditingId(null);
-    } else {
-      addProduct({
-        sku,
-        name: formData.name,
-        category,
-        cost: parseFloat(formData.cost),
-        unitPrice: parseFloat(formData.sellingPrice),
-        currentStock: parseInt(formData.currentStock) || 0,
-        reorderLevel: parseInt(formData.reorderLevel) || 0,
-      });
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Error adding product. Please try again.');
     }
-
-    setFormData({
-      sku: '',
-      name: '',
-      category: '',
-      cost: '',
-      sellingPrice: '',
-      currentStock: '',
-      reorderLevel: '',
-    });
-    setShowForm(false);
   };
 
   // Handle CSV Import
