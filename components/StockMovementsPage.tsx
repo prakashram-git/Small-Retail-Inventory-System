@@ -164,20 +164,20 @@ export default function StockMovementsPage() {
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search by SKU or product..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
           />
         </div>
 
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as any)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
         >
           <option value="all">All Types</option>
           <option value="purchase">Purchases</option>
@@ -197,40 +197,40 @@ export default function StockMovementsPage() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-lg font-semibold text-gray-900">Log Stock Movement</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Log Stock Movement</h2>
             </div>
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">SKU *</label>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">SKU *</label>
                 <input
                   type="text"
                   value={formData.sku}
                   onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                   placeholder="e.g., CHOC-001"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">Product Name *</label>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Product Name *</label>
                 <input
                   type="text"
                   value={formData.productName}
                   onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
                   placeholder="e.g., Dark Chocolate Bar"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">Type *</label>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Type *</label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <option value="purchase">Purchase (Stock In)</option>
                   <option value="sale">Sale (Stock Out)</option>
@@ -239,46 +239,46 @@ export default function StockMovementsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">Quantity *</label>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Quantity *</label>
                 <input
                   type="number"
                   value={formData.quantity}
                   onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                   placeholder="0"
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
               </div>
 
               {formData.type === 'purchase' && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-1">Supplier</label>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Supplier</label>
                   <input
                     type="text"
                     value={formData.supplier}
                     onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
                     placeholder="Supplier name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-1">Notes</label>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Notes</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="e.g., Reason for adjustment"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                   rows={2}
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex gap-3">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex gap-3">
               <button
                 onClick={() => setShowForm(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition font-medium"
               >
                 Cancel
               </button>
@@ -294,31 +294,31 @@ export default function StockMovementsPage() {
       )}
 
       {/* Movements Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Date & Time</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">SKU</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Product</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Type</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Quantity</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Notes</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Actions</th>
+              <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Date & Time</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">SKU</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Product</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Type</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Quantity</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Notes</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredMovements.map((movement, index) => (
-                <tr key={movement.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr key={movement.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/50'}>
                   <td className="px-4 py-3">
-                    <span className="text-sm text-gray-900">{formatDate(movement.date)}</span>
+                    <span className="text-sm text-gray-900 dark:text-gray-200">{formatDate(movement.date)}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="font-mono text-sm font-semibold text-gray-900">{movement.sku}</span>
+                    <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-200">{movement.sku}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-gray-900">{movement.productName}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-200">{movement.productName}</p>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getTypeColor(movement.type)}`}>
@@ -326,17 +326,17 @@ export default function StockMovementsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`text-sm font-bold ${movement.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`text-sm font-bold ${movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                       {movement.quantity > 0 ? '+' : ''}{movement.quantity}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-gray-600 truncate">{movement.notes}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{movement.notes}</p>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => handleDelete(movement.id)}
-                      className="p-1 text-red-600 hover:bg-red-50 rounded transition"
+                      className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -349,7 +349,7 @@ export default function StockMovementsPage() {
 
         {filteredMovements.length === 0 && (
           <div className="px-6 py-12 text-center">
-            <p className="text-gray-500">No movements found.</p>
+            <p className="text-gray-500 dark:text-gray-400">No movements found.</p>
           </div>
         )}
       </div>

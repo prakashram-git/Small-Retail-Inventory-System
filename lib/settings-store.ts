@@ -66,10 +66,22 @@ const getInitialDarkMode = () => {
   return saved ? JSON.parse(saved) : false;
 };
 
+const getInitialBrandName = () => {
+  if (typeof window === 'undefined') return 'RedHill Inventory';
+  const saved = localStorage.getItem('redhill-brandName');
+  return saved ? JSON.parse(saved) : 'RedHill Inventory';
+};
+
+const getInitialShopLocation = () => {
+  if (typeof window === 'undefined') return 'Singapore Central Mall';
+  const saved = localStorage.getItem('redhill-shopLocation');
+  return saved ? JSON.parse(saved) : 'Singapore Central Mall';
+};
+
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   settings: {
-    brandName: 'RedHill Inventory',
-    shopLocation: 'Singapore Central Mall',
+    brandName: getInitialBrandName(),
+    shopLocation: getInitialShopLocation(),
     darkMode: getInitialDarkMode(),
     theme: getInitialDarkMode() ? 'dark' : 'light',
   },
@@ -77,6 +89,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   currentUser: MOCK_USERS[0],
 
   updateBrandName: (name) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('redhill-brandName', JSON.stringify(name));
+    }
     set((state) => ({
       settings: { ...state.settings, brandName: name },
     }));
@@ -99,6 +114,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   },
 
   updateShopLocation: (location) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('redhill-shopLocation', JSON.stringify(location));
+    }
     set((state) => ({
       settings: { ...state.settings, shopLocation: location },
     }));

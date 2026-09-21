@@ -36,8 +36,17 @@ export default function Header() {
               <ShoppingCart className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
             </div>
             <div>
-              <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">RedHill</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Inventory</p>
+              {mounted ? (
+                <>
+                  <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">{settings.brandName.split(' ')[0]}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{settings.brandName.split(' ').slice(1).join(' ')}</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate">RedHill</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Inventory</p>
+                </>
+              )}
             </div>
           </div>
 
@@ -127,7 +136,7 @@ export default function Header() {
         <div className="px-3 sm:px-4 md:px-6 py-2 md:py-3 flex items-center gap-2">
           <BarChart3 className="w-4 sm:w-5 h-4 sm:h-5 text-brand-primary flex-shrink-0" />
           <p className="text-xs sm:text-sm font-medium text-brand-primary truncate">
-            Inventory Dashboard - Singapore Central Mall
+            Inventory Dashboard - {mounted ? settings.shopLocation : 'Singapore Central Mall'}
           </p>
         </div>
       </div>
