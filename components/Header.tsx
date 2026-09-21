@@ -19,6 +19,12 @@ export default function Header() {
     setMounted(true);
   }, []);
 
+  // Close menus on navigation
+  useEffect(() => {
+    setShowUserMenu(false);
+    setShowSettings(false);
+  }, [pathname]);
+
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true;
     if (path !== '/' && pathname.startsWith(path)) return true;
@@ -105,8 +111,8 @@ export default function Header() {
                   A
                 </div>
                 <div className="hidden lg:block">
-                  <p className="text-sm font-medium text-gray-900">Alex</p>
-                  <p className="text-xs text-gray-500">Mall Admin</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">Alex</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Mall Admin</p>
                 </div>
               </button>
 
