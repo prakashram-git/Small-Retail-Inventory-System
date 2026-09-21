@@ -63,27 +63,27 @@ export default function LowStockTable() {
 
       <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         {/* Frozen Header */}
-        <div className="sticky top-0 z-10 flex items-center px-2 py-0.5 bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap">
-          <div className="w-5 flex-shrink-0"></div>
-          <div className="w-28 flex-shrink-0 ml-8 flex items-center justify-start">
+        <div className="sticky top-0 z-10 flex items-center px-1 sm:px-2 py-0.5 bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700 whitespace-nowrap">
+          <div className="w-4 sm:w-5 flex-shrink-0"></div>
+          <div className="w-16 sm:w-28 flex-shrink-0 ml-1 sm:ml-8 flex items-center justify-start">
             <p className="font-mono text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>SKU</p>
           </div>
-          <div className="flex-1 mr-6 flex items-center justify-start">
+          <div className="flex-1 mr-1 sm:mr-6 flex items-center justify-start">
             <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Product</p>
           </div>
-          <div className="w-20 flex-shrink-0 ml-6 flex items-center justify-center">
-            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Current Stock</p>
+          <div className="w-14 sm:w-20 flex-shrink-0 ml-1 sm:ml-6 flex items-center justify-center">
+            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Qty</p>
           </div>
-          <div className="w-28 flex-shrink-0 ml-6 flex items-center justify-center">
-            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Last 30 Days Sales</p>
+          <div className="hidden sm:flex w-24 flex-shrink-0 ml-6 items-center justify-center">
+            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>L30D Sales</p>
           </div>
-          <div className="w-20 flex-shrink-0 ml-6 flex items-center justify-center">
-            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>ReOrder Level</p>
+          <div className="hidden md:flex w-20 flex-shrink-0 ml-6 items-center justify-center">
+            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>ReOrder</p>
           </div>
-          <div className="w-24 flex-shrink-0 ml-6 flex items-center justify-center">
-            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Suggested Order</p>
+          <div className="hidden lg:flex w-24 flex-shrink-0 ml-6 items-center justify-center">
+            <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Suggested</p>
           </div>
-          <div className="w-16 flex-shrink-0 ml-6 flex items-center justify-center">
+          <div className="w-14 sm:w-16 flex-shrink-0 ml-1 sm:ml-6 flex items-center justify-center">
             <p className="text-2xs font-bold text-gray-700 dark:text-gray-300" style={{ fontSize: '80%' }}>Price</p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function LowStockTable() {
             lowStockItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center px-2 py-0.5 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer whitespace-nowrap"
+                className="flex items-center px-1 sm:px-2 py-0.5 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer whitespace-nowrap"
               >
                 <input
                   type="checkbox"
@@ -102,25 +102,25 @@ export default function LowStockTable() {
                   onChange={() => handleSelectItem(item.id)}
                   className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 cursor-pointer flex-shrink-0"
                 />
-                <div className="w-28 flex-shrink-0 ml-8 flex items-center justify-start">
+                <div className="w-16 sm:w-28 flex-shrink-0 ml-1 sm:ml-8 flex items-center justify-start">
                   <p className="font-mono text-2xs font-bold text-gray-900 dark:text-gray-200" style={{ fontSize: '80%' }}>{item.sku}</p>
                 </div>
-                <div className="flex-1 mr-6 flex items-center justify-start">
+                <div className="flex-1 mr-1 sm:mr-6 flex items-center justify-start">
                   <p className="text-2xs text-gray-700 dark:text-gray-300 font-medium" style={{ fontSize: '80%' }}>{item.name}</p>
                 </div>
-                <div className="w-20 flex-shrink-0 ml-6 flex items-center justify-center">
+                <div className="w-14 sm:w-20 flex-shrink-0 ml-1 sm:ml-6 flex items-center justify-center">
                   <span className="text-2xs font-bold text-red-600 dark:text-red-400" style={{ fontSize: '80%' }}>{item.currentStock}</span>
                 </div>
-                <div className="w-28 flex-shrink-0 ml-6 flex items-center justify-center">
+                <div className="hidden sm:flex w-24 flex-shrink-0 ml-6 items-center justify-center">
                   <span className="text-2xs font-bold text-blue-600 dark:text-blue-400" style={{ fontSize: '80%' }}>{getLast30DaysSales(item.id)}</span>
                 </div>
-                <div className="w-20 flex-shrink-0 ml-6 flex items-center justify-center">
+                <div className="hidden md:flex w-20 flex-shrink-0 ml-6 items-center justify-center">
                   <span className="text-2xs font-bold text-purple-600 dark:text-purple-400" style={{ fontSize: '80%' }}>{item.reorderLevel}</span>
                 </div>
-                <div className="w-24 flex-shrink-0 ml-6 flex items-center justify-center">
+                <div className="hidden lg:flex w-24 flex-shrink-0 ml-6 items-center justify-center">
                   <span className="text-2xs font-bold text-orange-600 dark:text-orange-400" style={{ fontSize: '80%' }}>{getSuggestedOrderQuantity(item.id)}</span>
                 </div>
-                <div className="w-16 flex-shrink-0 ml-6 flex items-center justify-center">
+                <div className="w-14 sm:w-16 flex-shrink-0 ml-1 sm:ml-6 flex items-center justify-center">
                   <span className="text-2xs font-bold text-green-600 dark:text-green-400" style={{ fontSize: '80%' }}>${item.unitPrice.toFixed(2)}</span>
                 </div>
               </div>
