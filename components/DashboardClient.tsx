@@ -29,17 +29,23 @@ export default function DashboardClient({ children }: DashboardClientProps) {
   const [mounted, setMounted] = useState(false);
 
   const products = useInventoryStore((state) => state.products);
-  const getLast30DaysSales = useInventoryStore((state) => state.getLast30DaysSales);
+  const movements = useInventoryStore((state) => state.movements);
   const updateNotificationBadge = useInventoryStore((state) => state.updateNotificationBadge);
   const { settings } = useSettingsStore();
 
   // Calculate total inventory value from products
   const totalInventoryValue = products.reduce((total, product) => total + product.currentStock * product.unitPrice, 0);
 
-  // Calculate total sales from all products
+  // Calculate total sales from all products (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
   const totalSales = products.reduce((total, product) => {
-    const last30Days = getLast30DaysSales(product.id);
-    return total + last30Days * product.unitPrice;
+    const last30DaysMovements = movements.filter(
+      (m) => m.productId === product.id && m.type === 'sale' && new Date(m.timestamp) >= thirtyDaysAgo
+    );
+    const last30DaysQty = last30DaysMovements.reduce((sum, m) => sum + Math.abs(m.quantity), 0);
+    return total + last30DaysQty * product.unitPrice;
   }, 0);
 
   // Calculate low stock count
