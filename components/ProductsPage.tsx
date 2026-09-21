@@ -261,6 +261,8 @@ export default function ProductsPage() {
 
   if (!mounted) return null;
 
+  console.log('ProductsPage rendering - products count:', products.length);
+
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
       {/* Debug Info - Product Count */}
@@ -490,12 +492,14 @@ export default function ProductsPage() {
 
             <div className="sticky bottom-0 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex gap-3">
               <button
+                type="button"
                 onClick={handleCancel}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition font-medium"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleAdd}
                 className="flex-1 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-dark transition font-medium"
               >
