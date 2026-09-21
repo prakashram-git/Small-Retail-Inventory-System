@@ -33,9 +33,10 @@ export default function Header() {
 
   return (
     <>
-      {/* Navigation Tabs with Logo - TOP HEADER */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-40 overflow-x-auto transition-colors duration-200">
-        <div className="px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-4 border-b-2 border-brand-primary py-3">
+      {/* Navigation Header */}
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-40 transition-colors duration-200">
+        {/* Logo and Controls Row */}
+        <div className="px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-4 py-3">
           {/* Logo Section */}
           <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
             <div className="bg-gradient-to-br from-brand-primary to-brand-dark rounded-lg p-2 sm:p-3">
@@ -54,16 +55,6 @@ export default function Header() {
                 </>
               )}
             </div>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto flex-1">
-            <a href="/" className={isActive('/') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-blue-50 text-blue-700 shadow-sm dark:bg-blue-900 dark:text-blue-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Dashboard</a>
-            <a href="/products" className={isActive('/products') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-green-50 text-green-700 shadow-sm dark:bg-green-900 dark:text-green-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Products</a>
-            <a href="/stock-movements" className={isActive('/stock-movements') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-purple-50 text-purple-700 shadow-sm dark:bg-purple-900 dark:text-purple-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Stock Movements</a>
-            <a href="/suppliers" className={isActive('/suppliers') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-orange-50 text-orange-700 shadow-sm dark:bg-orange-900 dark:text-orange-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Suppliers</a>
-            <a href="/reports" className={isActive('/reports') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-amber-50 text-amber-700 shadow-sm dark:bg-amber-900 dark:text-amber-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Reports</a>
-            <a href="/stocktake" className={isActive('/stocktake') ? 'px-3 py-1.5 text-xs font-semibold whitespace-nowrap rounded-full transition-all duration-300 bg-rose-50 text-rose-700 shadow-sm dark:bg-rose-900 dark:text-rose-200' : 'px-3 py-1.5 text-xs font-medium whitespace-nowrap rounded-full transition-all duration-300 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700'}>Stocktake</a>
           </div>
 
           {/* Right Controls */}
@@ -131,6 +122,18 @@ export default function Header() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Tabs Section - Below Logo */}
+        <div className="px-3 sm:px-4 md:px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <a href="/" className={isActive('/') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-blue-100 text-blue-700 shadow-sm dark:bg-blue-900 dark:text-blue-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Dashboard</a>
+            <a href="/products" className={isActive('/products') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-green-100 text-green-700 shadow-sm dark:bg-green-900 dark:text-green-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Products</a>
+            <a href="/stock-movements" className={isActive('/stock-movements') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-purple-100 text-purple-700 shadow-sm dark:bg-purple-900 dark:text-purple-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Stock</a>
+            <a href="/suppliers" className={isActive('/suppliers') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-orange-100 text-orange-700 shadow-sm dark:bg-orange-900 dark:text-orange-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Suppliers</a>
+            <a href="/reports" className={isActive('/reports') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-amber-100 text-amber-700 shadow-sm dark:bg-amber-900 dark:text-amber-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Reports</a>
+            <a href="/stocktake" className={isActive('/stocktake') ? 'px-3 py-2 text-xs font-semibold whitespace-nowrap rounded-2xl transition-all duration-300 bg-rose-100 text-rose-700 shadow-sm dark:bg-rose-900 dark:text-rose-200' : 'px-3 py-2 text-xs font-medium whitespace-nowrap rounded-2xl transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}>Stocktake</a>
           </div>
         </div>
       </header>
