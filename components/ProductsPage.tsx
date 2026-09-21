@@ -79,12 +79,16 @@ export default function ProductsPage() {
   );
 
   const handleAdd = () => {
+    console.log('handleAdd called - formData:', formData);
+
     if (!formData.name || !formData.cost || !formData.sellingPrice) {
+      console.log('Validation failed - missing fields');
       alert('Please fill all required fields: Name, Cost, and Selling Price');
       return;
     }
 
     try {
+      console.log('Validation passed, proceeding with add');
       // Use provided SKU or generate one
       const sku = formData.sku || generateSKU();
       const category = formData.category || detectCategory(formData.name);
@@ -93,12 +97,15 @@ export default function ProductsPage() {
       const currentStock = parseInt(formData.currentStock) || 0;
       const reorderLevel = parseInt(formData.reorderLevel) || 0;
 
+      console.log('Parsed data:', { sku, category, cost, unitPrice, currentStock, reorderLevel });
+
       if (isNaN(cost) || isNaN(unitPrice)) {
         alert('Cost and Selling Price must be valid numbers');
         return;
       }
 
       if (editingId) {
+        console.log('Editing product:', editingId);
         editProduct(editingId, {
           sku,
           name: formData.name,
@@ -110,6 +117,8 @@ export default function ProductsPage() {
         });
         setEditingId(null);
       } else {
+        console.log('Adding new product - calling addProduct');
+        console.log('addProduct function:', typeof addProduct);
         addProduct({
           sku,
           name: formData.name,
@@ -119,6 +128,7 @@ export default function ProductsPage() {
           currentStock,
           reorderLevel,
         });
+        console.log('Product added, resetting form');
       }
 
       setFormData({
@@ -133,7 +143,7 @@ export default function ProductsPage() {
       setShowForm(false);
     } catch (error) {
       console.error('Error adding product:', error);
-      alert('Error adding product. Please try again.');
+      alert('Error adding product. Please try again: ' + JSON.stringify(error));
     }
   };
 
