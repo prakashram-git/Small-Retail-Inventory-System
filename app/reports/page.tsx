@@ -77,74 +77,73 @@ export default function ReportsPage() {
             </div>
           </div>
 
-          {/* Date Range Selector */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
-              {/* Preset Options */}
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Range</label>
-                <select
-                  value={useCustomRange ? '' : dateRange}
-                  onChange={(e) => {
-                    setDateRange(e.target.value);
-                    setUseCustomRange(false);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                >
-                  <option value="7">Last 7 Days</option>
-                  <option value="30">Last 30 Days</option>
-                  <option value="90">Last 90 Days</option>
-                  <option value="365">Last Year</option>
-                </select>
-              </div>
-
-              <div className="text-sm text-gray-500 dark:text-gray-400">OR</div>
-
-              {/* Custom Date Range */}
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  Custom Range
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="date"
-                    value={customStartDate}
-                    onChange={(e) => {
-                      setCustomStartDate(e.target.value);
-                      setUseCustomRange(true);
-                    }}
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                    placeholder="Start"
-                  />
-                  <span className="text-gray-400 flex items-center">-</span>
-                  <input
-                    type="date"
-                    value={customEndDate}
-                    onChange={(e) => {
-                      setCustomEndDate(e.target.value);
-                      setUseCustomRange(true);
-                    }}
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                    placeholder="End"
-                  />
-                </div>
-              </div>
-
-              {/* Reset Button */}
-              {useCustomRange && (
+          {/* Date Range Selector - Compact */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl border border-blue-200 dark:border-gray-600 px-3.5 py-2.5 inline-flex items-center gap-3 flex-wrap">
+            {/* Quick Range Buttons */}
+            <div className="flex gap-1.5">
+              {[
+                { label: '7d', value: '7' },
+                { label: '30d', value: '30' },
+                { label: '90d', value: '90' },
+                { label: '1y', value: '365' },
+              ].map((opt) => (
                 <button
+                  key={opt.value}
                   onClick={() => {
-                    setCustomStartDate('');
-                    setCustomEndDate('');
+                    setDateRange(opt.value);
                     setUseCustomRange(false);
                   }}
-                  className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm font-medium"
+                  className={`px-2.5 py-1 text-xs font-medium rounded-full transition ${
+                    !useCustomRange && dateRange === opt.value
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                  }`}
                 >
-                  Reset
+                  {opt.label}
                 </button>
-              )}
+              ))}
             </div>
+
+            {/* Separator */}
+            <div className="w-px h-5 bg-gray-300 dark:bg-gray-600"></div>
+
+            {/* Custom Date Range */}
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+              <input
+                type="date"
+                value={customStartDate}
+                onChange={(e) => {
+                  setCustomStartDate(e.target.value);
+                  setUseCustomRange(true);
+                }}
+                className="w-24 px-2 py-1 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <span className="text-xs text-gray-500 dark:text-gray-400">-</span>
+              <input
+                type="date"
+                value={customEndDate}
+                onChange={(e) => {
+                  setCustomEndDate(e.target.value);
+                  setUseCustomRange(true);
+                }}
+                className="w-24 px-2 py-1 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Reset Button */}
+            {useCustomRange && (
+              <button
+                onClick={() => {
+                  setCustomStartDate('');
+                  setCustomEndDate('');
+                  setUseCustomRange(false);
+                }}
+                className="px-2 py-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full hover:bg-red-200 dark:hover:bg-red-900/50 transition font-medium"
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
