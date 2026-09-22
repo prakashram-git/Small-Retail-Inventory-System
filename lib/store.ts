@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Product, StockMovement, Toast, PurchaseOrder, GoodsReceipt, Invoice, Stocktake, Supplier, InventoryMetrics } from './types';
-import { MOCK_PRODUCTS, MOCK_STOCK_MOVEMENTS, MOCK_SALES_DATA } from './mock-data';
 
 interface InventoryState {
   // Core Data
@@ -77,20 +76,16 @@ interface InventoryState {
 }
 
 export const useInventoryStore = create<InventoryState>((set, get) => ({
-  // Initial state
-  products: MOCK_PRODUCTS,
-  movements: MOCK_STOCK_MOVEMENTS,
+  // Initial state - All empty (cleared of sample data)
+  products: [],
+  movements: [],
   toasts: [],
   notificationBadge: 0,
   purchaseOrders: [],
   goodsReceipts: [],
   invoices: [],
   stocktakes: [],
-  suppliers: [
-    { id: 'sup-1', name: 'Premium Sweets Inc.', leadTimeDays: 5, isActive: true, rating: 4.5, contactPerson: 'John Smith' },
-    { id: 'sup-2', name: 'Fresh Beverages Inc.', leadTimeDays: 3, isActive: true, rating: 4.8, contactPerson: 'Sarah Lee' },
-    { id: 'sup-3', name: 'Snack Masters Co.', leadTimeDays: 7, isActive: true, rating: 4.2, contactPerson: 'Mike Chen' },
-  ],
+  suppliers: [],
 
   // ===== PRODUCT MANAGEMENT =====
   updateStock: (productId, quantity, type, notes, referenceId) => {
@@ -414,8 +409,14 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
   },
 
   getLast30DaysSales: (productId: string) => {
-    const salesData = MOCK_SALES_DATA.find((s) => s.productId === productId);
-    return salesData ? salesData.last30Days : 0;
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const movements = get().movements.filter(
+      (m) => m.productId === productId && m.type === 'sale' && new Date(m.timestamp) >= thirtyDaysAgo
+    );
+
+    return movements.reduce((total, m) => total + Math.abs(m.quantity), 0);
   },
 
   getSuggestedOrderQuantity: (productId: string) => {
