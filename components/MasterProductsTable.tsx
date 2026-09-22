@@ -4,14 +4,14 @@ import { useState, useMemo, useEffect } from 'react';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { Search, Download, Eye } from 'lucide-react';
-import { useCSVLoader } from '@/lib/use-csv-loader';
-import { generateCSV, downloadCSV } from '@/lib/csv-handler';
+import { useProductsLoader } from '@/lib/use-csv-loader';
+import { generateJSON, downloadJSON } from '@/lib/json-handler';
 
 type SortField = 'sku' | 'name' | 'category' | 'stock' | 'price';
 type SortOrder = 'asc' | 'desc';
 
 export default function MasterProductsTable() {
-  useCSVLoader();
+  useProductsLoader();
   const products = useInventoryStore((state) => state.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('sku');
@@ -100,9 +100,9 @@ export default function MasterProductsTable() {
     }
   };
 
-  const exportToCSV = () => {
-    const csvContent = generateCSV(filteredProducts);
-    downloadCSV(csvContent, `products-${new Date().toISOString().split('T')[0]}.csv`);
+  const exportToJSON = () => {
+    const jsonContent = generateJSON(filteredProducts);
+    downloadJSON(jsonContent, `products-${new Date().toISOString().split('T')[0]}.json`);
   };
 
   const getSortIcon = (field: SortField) => {
@@ -181,11 +181,11 @@ export default function MasterProductsTable() {
 
           {/* Export Button */}
           <button
-            onClick={exportToCSV}
+            onClick={exportToJSON}
             className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-2xs sm:text-xs font-medium transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
-            Export CSV
+            Export JSON
           </button>
         </div>
       </div>

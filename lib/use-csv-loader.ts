@@ -2,25 +2,25 @@
 
 import { useEffect } from 'react';
 import { useInventoryStore } from './store';
-import { parseCSV } from './csv-handler';
+import { parseJSON } from './json-handler';
 
-export function useCSVLoader() {
+export function useProductsLoader() {
   useEffect(() => {
-    const loadCSV = async () => {
+    const loadProducts = async () => {
       try {
-        const response = await fetch('/products.csv');
-        const csvText = await response.text();
-        const products = parseCSV(csvText);
+        const response = await fetch('/products.json');
+        const jsonText = await response.text();
+        const products = parseJSON(jsonText);
 
         if (products.length > 0) {
           useInventoryStore.setState({ products });
           useInventoryStore.getState().updateNotificationBadge();
         }
       } catch (error) {
-        console.error('Failed to load products.csv:', error);
+        console.error('Failed to load products.json:', error);
       }
     };
 
-    loadCSV();
+    loadProducts();
   }, []);
 }
