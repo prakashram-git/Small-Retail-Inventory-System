@@ -1,4 +1,3 @@
-import DashboardClient from '@/components/DashboardClient';
 import Header from '@/components/Header';
 import SettingsPage from '@/components/SettingsPage';
 
@@ -9,9 +8,9 @@ export const metadata = {
 
 export default function SettingsRoute() {
   return (
-    <DashboardClient>
+    <>
       <Header />
       <SettingsPage />
-    </DashboardClient>
+    </>
   );
 }
