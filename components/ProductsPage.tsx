@@ -30,7 +30,7 @@ export default function ProductsPage() {
     category: '',
     supplier: '',
     location: '',
-    status: 'active' as const,
+    status: 'active' as 'active' | 'inactive' | 'discontinued',
   });
 
   const products = useInventoryStore((state) => state.products);
