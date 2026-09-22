@@ -552,6 +552,11 @@ export default function ProductsPage() {
                         <div className="font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap overflow-hidden text-ellipsis" title={product.name}>
                           {product.name}
                         </div>
+                        {product.description && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap overflow-hidden text-ellipsis" title={product.description}>
+                            {product.description}
+                          </div>
+                        )}
                       </td>
                       <td className="px-2 py-1.5 text-center">{getStockBadge(stockStatus)}</td>
                       <td className="px-2 py-1.5 text-center font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">{product.currentStock}</td>
