@@ -235,16 +235,16 @@ export const MOCK_STOCK_MOVEMENTS: StockMovement[] = [
 ];
 
 export const MOCK_SALES_DATA: SalesData[] = [
-  { productId: '1', last30Days: 45 },
-  { productId: '2', last30Days: 120 },
-  { productId: '3', last30Days: 80 },
-  { productId: '4', last30Days: 15 },
-  { productId: '5', last30Days: 250 },
-  { productId: '6', last30Days: 65 },
-  { productId: '7', last30Days: 35 },
-  { productId: '8', last30Days: 95 },
-  { productId: '9', last30Days: 50 },
-  { productId: '10', last30Days: 22 },
+  { productId: '1', last7Days: 10, last30Days: 45, last90Days: 140, last365Days: 540, averageDailySales: 1.5, totalRevenue: 202.5 },
+  { productId: '2', last7Days: 28, last30Days: 120, last90Days: 370, last365Days: 1440, averageDailySales: 4, totalRevenue: 384 },
+  { productId: '3', last7Days: 18, last30Days: 80, last90Days: 240, last365Days: 960, averageDailySales: 2.67, totalRevenue: 224 },
+  { productId: '4', last7Days: 3, last30Days: 15, last90Days: 45, last365Days: 180, averageDailySales: 0.5, totalRevenue: 89.85 },
+  { productId: '5', last7Days: 60, last30Days: 250, last90Days: 750, last365Days: 3000, averageDailySales: 8.33, totalRevenue: 625 },
+  { productId: '6', last7Days: 14, last30Days: 65, last90Days: 195, last365Days: 780, averageDailySales: 2.17, totalRevenue: 259.35 },
+  { productId: '7', last7Days: 8, last30Days: 35, last90Days: 105, last365Days: 420, averageDailySales: 1.17, totalRevenue: 262.5 },
+  { productId: '8', last7Days: 22, last30Days: 95, last90Days: 285, last365Days: 1140, averageDailySales: 3.17, totalRevenue: 356.25 },
+  { productId: '9', last7Days: 12, last30Days: 50, last90Days: 150, last365Days: 600, averageDailySales: 1.67, totalRevenue: 210 },
+  { productId: '10', last7Days: 5, last30Days: 22, last90Days: 66, last365Days: 264, averageDailySales: 0.73, totalRevenue: 153.78 },
 ];
 
 export const LOCATIONS = [

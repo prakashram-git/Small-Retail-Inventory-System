@@ -1,13 +1,14 @@
 'use client';
 
 import { useInventoryStore } from '@/lib/store';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, AlertCircle, Trash2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { StockMovement } from '@/lib/types';
 
 export default function RecentMovements() {
   const movements = useInventoryStore((state) => state.movements.slice(0, 4));
 
-  const getTypeIcon = (type: 'purchase' | 'sale' | 'adjustment') => {
+  const getTypeIcon = (type: StockMovement['type']) => {
     switch (type) {
       case 'purchase':
         return <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />;
@@ -15,10 +16,18 @@ export default function RecentMovements() {
         return <TrendingDown className="w-4 h-4 text-red-600 dark:text-red-400" />;
       case 'adjustment':
         return <Minus className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />;
+      case 'return':
+        return <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
+      case 'damage':
+        return <AlertCircle className="w-4 h-4 text-orange-600 dark:text-orange-400" />;
+      case 'theft':
+        return <Trash2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />;
+      default:
+        return <Minus className="w-4 h-4 text-gray-400" />;
     }
   };
 
-  const getTypeBadgeStyle = (type: 'purchase' | 'sale' | 'adjustment') => {
+  const getTypeBadgeStyle = (type: StockMovement['type']) => {
     switch (type) {
       case 'purchase':
         return 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200';
@@ -26,11 +35,27 @@ export default function RecentMovements() {
         return 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200';
       case 'adjustment':
         return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200';
+      case 'return':
+        return 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200';
+      case 'damage':
+        return 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200';
+      case 'theft':
+        return 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200';
+      default:
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
   };
 
-  const getTypeLabel = (type: 'purchase' | 'sale' | 'adjustment') => {
-    return type.charAt(0).toUpperCase() + type.slice(1);
+  const getTypeLabel = (type: StockMovement['type']) => {
+    const labels: Record<StockMovement['type'], string> = {
+      purchase: 'Purchase',
+      sale: 'Sale',
+      adjustment: 'Adjustment',
+      return: 'Return',
+      damage: 'Damage',
+      theft: 'Theft',
+    };
+    return labels[type] || type;
   };
 
   return (
