@@ -6,6 +6,7 @@ import { formatCurrency } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { TrendingUp, TrendingDown, AlertCircle, Truck, Package, Calendar, Filter } from 'lucide-react';
 import { useSettingsStore } from '@/lib/settings-store';
+import { generateReportPDF } from '@/lib/pdf-generator';
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('30');
@@ -117,6 +118,72 @@ export default function ReportsPage() {
       .slice(0, 10);
   }, [products, selectedProduct, selectedSupplier]);
 
+  const handleGenerateReport = () => {
+    setReportGenerated(true);
+
+    // Compile report data
+    const dateRangeLabel = useCustomRange
+      ? `${customStartDate} to ${customEndDate}`
+      : `Last ${dateRange} days`;
+
+    const reportData = {
+      title: '📊 Inventory Report',
+      dateRange: dateRangeLabel,
+      generatedDate: new Date().toLocaleString(),
+      brandName: settings.brandName,
+      shopLocation: settings.shopLocation,
+      metrics: {
+        totalInventoryValue: formatCurrency(metrics.totalValue),
+        totalSales: formatCurrency(salesReport.totalSales),
+        totalSalesUnits: salesReport.totalItems,
+        lowStockCount: lowStockReport.length,
+        turnoverRatio: metrics.turnoverRatio,
+      },
+      sections: [
+        {
+          name: 'Sales by Category',
+          data: Object.entries(salesReport.byCategory).map(([category, units]) => ({
+            label: category,
+            value: `${units} units`,
+          })),
+        },
+        {
+          name: 'Low Stock Items',
+          data: lowStockReport.slice(0, 10).map((p) => ({
+            label: p.name,
+            value: `${p.currentStock}/${p.reorderLevel} units`,
+          })),
+        },
+        {
+          name: 'Top Profit Margins',
+          data: profitReport.slice(0, 10).map((p) => ({
+            label: p.name,
+            value: `${p.profitMargin}% (Cost: $${p.cost}, Price: $${p.unitPrice})`,
+          })),
+        },
+        {
+          name: 'Supplier Performance',
+          data: supplierPerformance.slice(0, 5).map((s) => ({
+            label: s.name,
+            value: `On-time: ${s.onTimeDelivery}% | Quality: ${Math.round(s.qualityScore)}%`,
+          })),
+        },
+        {
+          name: 'Inventory Aging (Top 10)',
+          data: inventoryAging.map((p) => ({
+            label: p.name,
+            value: `${p.daysInStock} days | Stock: ${p.currentStock} | Value: ${formatCurrency(p.currentStock * p.unitPrice)}`,
+          })),
+        },
+      ],
+    };
+
+    // Generate PDF with a slight delay to ensure state updates
+    setTimeout(() => {
+      generateReportPDF(reportData);
+    }, 100);
+  };
+
   return (
     <>
       <Header />
@@ -202,7 +269,7 @@ export default function ReportsPage() {
           <div className="mt-4 space-y-3">
             <div className="flex gap-3 items-start">
               <button
-                onClick={() => setReportGenerated(true)}
+                onClick={handleGenerateReport}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
               >
                 📊 Generate Report
@@ -268,7 +335,7 @@ export default function ReportsPage() {
 
                 <div className="mt-3 flex gap-2">
                   <button
-                    onClick={() => setReportGenerated(true)}
+                    onClick={handleGenerateReport}
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
                   >
                     ✓ Apply & Generate
