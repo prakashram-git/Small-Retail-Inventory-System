@@ -2,11 +2,19 @@ export interface Product {
   id: string;
   sku: string;
   name: string;
+  description?: string;
   currentStock: number;
+  minStock: number;
+  maxStock: number;
   reorderLevel: number;
-  unitPrice: number;
   cost: number;
+  unitPrice: number;
   category: string;
+  supplier?: string;
+  location?: string;
+  status: 'active' | 'inactive' | 'discontinued';
+  lastRestockDate?: Date;
+  profitMargin?: number;
 }
 
 export interface StockMovement {
