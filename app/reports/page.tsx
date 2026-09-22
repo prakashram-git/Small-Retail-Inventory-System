@@ -4,18 +4,30 @@ import Header from '@/components/Header';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { useMemo, useState } from 'react';
-import { TrendingUp, TrendingDown, AlertCircle, Truck, Package } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Truck, Package, Calendar } from 'lucide-react';
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('30');
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
+  const [useCustomRange, setUseCustomRange] = useState(false);
   const metrics = useInventoryStore((state) => state.getInventoryMetrics());
   const products = useInventoryStore((state) => state.products);
   const suppliers = useInventoryStore((state) => state.suppliers);
   const movements = useInventoryStore((state) => state.movements);
   const salesReport = useInventoryStore((state) => {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - parseInt(dateRange));
+    let startDate: Date;
+    let endDate: Date;
+
+    if (useCustomRange && customStartDate && customEndDate) {
+      startDate = new Date(customStartDate);
+      endDate = new Date(customEndDate);
+    } else {
+      endDate = new Date();
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - parseInt(dateRange));
+    }
+
     return state.getSalesReport(startDate, endDate);
   });
 
@@ -57,21 +69,83 @@ export default function ReportsPage() {
     <>
       <Header />
       <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Comprehensive inventory analysis and performance metrics</p>
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Comprehensive inventory analysis and performance metrics</p>
+            </div>
           </div>
-          <select
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-          >
-            <option value="7">Last 7 Days</option>
-            <option value="30">Last 30 Days</option>
-            <option value="90">Last 90 Days</option>
-            <option value="365">Last Year</option>
-          </select>
+
+          {/* Date Range Selector */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+              {/* Preset Options */}
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Range</label>
+                <select
+                  value={useCustomRange ? '' : dateRange}
+                  onChange={(e) => {
+                    setDateRange(e.target.value);
+                    setUseCustomRange(false);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                >
+                  <option value="7">Last 7 Days</option>
+                  <option value="30">Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                  <option value="365">Last Year</option>
+                </select>
+              </div>
+
+              <div className="text-sm text-gray-500 dark:text-gray-400">OR</div>
+
+              {/* Custom Date Range */}
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  Custom Range
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="date"
+                    value={customStartDate}
+                    onChange={(e) => {
+                      setCustomStartDate(e.target.value);
+                      setUseCustomRange(true);
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    placeholder="Start"
+                  />
+                  <span className="text-gray-400 flex items-center">-</span>
+                  <input
+                    type="date"
+                    value={customEndDate}
+                    onChange={(e) => {
+                      setCustomEndDate(e.target.value);
+                      setUseCustomRange(true);
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    placeholder="End"
+                  />
+                </div>
+              </div>
+
+              {/* Reset Button */}
+              {useCustomRange && (
+                <button
+                  onClick={() => {
+                    setCustomStartDate('');
+                    setCustomEndDate('');
+                    setUseCustomRange(false);
+                  }}
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm font-medium"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* KPI Cards */}

@@ -17,6 +17,7 @@ export default function ProductsPage() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'low-stock'>('all');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
 
   const [formData, setFormData] = useState({
     sku: '',
@@ -154,6 +155,24 @@ export default function ProductsPage() {
     };
     const badge = badges[status];
     return <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.bg} ${badge.text}`}>{badge.label}</span>;
+  };
+
+  const toggleProductSelection = (productId: string) => {
+    const newSelected = new Set(selectedProducts);
+    if (newSelected.has(productId)) {
+      newSelected.delete(productId);
+    } else {
+      newSelected.add(productId);
+    }
+    setSelectedProducts(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedProducts.size === filteredAndSorted.length) {
+      setSelectedProducts(new Set());
+    } else {
+      setSelectedProducts(new Set(filteredAndSorted.map((p) => p.id)));
+    }
   };
 
   return (
@@ -477,6 +496,15 @@ export default function ProductsPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-700 dark:to-gray-600 border-b border-gray-700">
+                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50">
+                    <input
+                      type="checkbox"
+                      checked={selectedProducts.size === filteredAndSorted.length && filteredAndSorted.length > 0}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded cursor-pointer accent-blue-600"
+                      title="Select all"
+                    />
+                  </th>
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('sku')}>
                     SKU
                   </th>
@@ -509,8 +537,16 @@ export default function ProductsPage() {
                         isEvenRow
                           ? 'bg-white dark:bg-gray-800/50'
                           : 'bg-gray-50 dark:bg-gray-800'
-                      }`}
+                      } ${selectedProducts.has(product.id) ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
                     >
+                      <td className="px-4 py-2.5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedProducts.has(product.id)}
+                          onChange={() => toggleProductSelection(product.id)}
+                          className="w-4 h-4 rounded cursor-pointer accent-blue-600"
+                        />
+                      </td>
                       <td className="px-4 py-2.5 font-mono text-gray-600 dark:text-gray-400">{product.sku}</td>
                       <td className="px-4 py-2.5">
                         <div className="font-medium text-gray-900 dark:text-gray-100">{product.name}</div>
