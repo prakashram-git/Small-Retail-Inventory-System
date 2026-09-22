@@ -172,14 +172,41 @@ export default function ProductsPage() {
   };
 
   const getStockBadge = (status: string) => {
-    const badges: Record<string, { bg: string; text: string; label: string }> = {
-      critical: { bg: 'bg-red-100 dark:bg-red-900', text: 'text-red-800 dark:text-red-200', label: 'Critical' },
-      low: { bg: 'bg-yellow-100 dark:bg-yellow-900', text: 'text-yellow-800 dark:text-yellow-200', label: 'Low' },
-      overstocked: { bg: 'bg-blue-100 dark:bg-blue-900', text: 'text-blue-800 dark:text-blue-200', label: 'Overstocked' },
-      healthy: { bg: 'bg-green-100 dark:bg-green-900', text: 'text-green-800 dark:text-green-200', label: 'Healthy' },
+    const badges: Record<string, { bg: string; text: string; label: string; message: string }> = {
+      critical: {
+        bg: 'bg-red-100 dark:bg-red-900',
+        text: 'text-red-800 dark:text-red-200',
+        label: 'Critical',
+        message: 'Stock level is below reorder point. Urgent action required!'
+      },
+      low: {
+        bg: 'bg-yellow-100 dark:bg-yellow-900',
+        text: 'text-yellow-800 dark:text-yellow-200',
+        label: 'Low',
+        message: 'Stock is below minimum level. Consider reordering soon.'
+      },
+      overstocked: {
+        bg: 'bg-blue-100 dark:bg-blue-900',
+        text: 'text-blue-800 dark:text-blue-200',
+        label: 'Overstocked',
+        message: 'Stock exceeds maximum level. Consider reducing inventory.'
+      },
+      healthy: {
+        bg: 'bg-green-100 dark:bg-green-900',
+        text: 'text-green-800 dark:text-green-200',
+        label: 'Healthy',
+        message: 'Stock level is optimal and within acceptable range.'
+      },
     };
     const badge = badges[status];
-    return <span className={`px-2 py-1 rounded-full text-xs font-medium ${badge.bg} ${badge.text}`}>{badge.label}</span>;
+    return (
+      <span
+        className={`px-2 py-1 rounded-full text-xs font-medium ${badge.bg} ${badge.text} cursor-help transition-opacity hover:opacity-80`}
+        title={badge.message}
+      >
+        {badge.label}
+      </span>
+    );
   };
 
   const toggleProductSelection = (productId: string) => {
