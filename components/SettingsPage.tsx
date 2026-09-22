@@ -5,6 +5,7 @@ import { useSettingsStore } from '@/lib/settings-store';
 import { useInventoryStore } from '@/lib/store';
 import { Settings, Moon, Sun, Lock, Trash2, Plus, Edit2, CheckCircle, Circle } from 'lucide-react';
 import { UserRole } from '@/lib/types';
+import DatabaseViewer from '@/components/DatabaseViewer';
 
 export default function SettingsPage() {
   const { settings, updateBrandName, toggleDarkMode, updateShopLocation, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
@@ -312,6 +313,9 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
+          {/* Database Manager */}
+          <DatabaseViewer />
         </div>
       </main>
     </div>
