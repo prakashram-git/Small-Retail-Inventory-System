@@ -194,6 +194,7 @@ export interface Settings {
   currency?: string;
   taxRate?: number;
   autoReorderEnabled?: boolean;
+  loginBackground?: 'gradient' | 'retail' | 'modern' | 'minimal';
 }
 
 export interface InventoryMetrics {

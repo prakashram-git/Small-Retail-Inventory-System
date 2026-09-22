@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '@/lib/auth-store';
+import { useSettingsStore } from '@/lib/settings-store';
 import { ShoppingCart, Mail, Lock } from 'lucide-react';
 
 interface LoginPageProps {
@@ -9,11 +10,20 @@ interface LoginPageProps {
   shopLocation: string;
 }
 
+const backgroundPatterns = {
+  gradient: 'bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900',
+  retail: 'bg-gradient-to-br from-amber-50 via-blue-50 to-slate-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900',
+  modern: 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-black dark:via-purple-950 dark:to-black',
+  minimal: 'bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-900',
+};
+
 export default function LoginPage({ brandName, shopLocation }: LoginPageProps) {
   const [email, setEmail] = useState('admin@redhill.com');
   const [password, setPassword] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuthStore();
+  const { settings } = useSettingsStore();
+  const bgPattern = backgroundPatterns[settings.loginBackground as keyof typeof backgroundPatterns] || backgroundPatterns.gradient;
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,10 +42,38 @@ export default function LoginPage({ brandName, shopLocation }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
+    <div className={`min-h-screen ${bgPattern} flex items-center justify-center px-4 py-12 relative overflow-hidden`}>
+      {/* Retail Pattern Overlay */}
+      <svg className="absolute inset-0 w-full h-full opacity-5 dark:opacity-3" viewBox="0 0 1200 1200" fill="none">
+        {/* Warehouse shelves pattern */}
+        <defs>
+          <pattern id="shelves" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+            {/* Shelf structure */}
+            <rect x="10" y="20" width="180" height="8" fill="currentColor" />
+            <rect x="10" y="60" width="180" height="8" fill="currentColor" />
+            <rect x="10" y="100" width="180" height="8" fill="currentColor" />
+            <rect x="10" y="140" width="180" height="8" fill="currentColor" />
+            {/* Support columns */}
+            <rect x="15" y="20" width="4" height="140" fill="currentColor" opacity="0.6" />
+            <rect x="180" y="20" width="4" height="140" fill="currentColor" opacity="0.6" />
+            {/* Products on shelves */}
+            <rect x="25" y="30" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="45" y="30" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="65" y="30" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="85" y="30" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="25" y="70" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="45" y="70" width="12" height="15" fill="currentColor" opacity="0.5" />
+            <rect x="65" y="70" width="12" height="15" fill="currentColor" opacity="0.5" />
+          </pattern>
+        </defs>
+        <rect width="1200" height="1200" fill="url(#shelves)" stroke="currentColor" strokeWidth="0.5" opacity="0.1" />
+      </svg>
+
+      {/* Gradient overlay for better readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent dark:from-black/20"></div>
+      <div className="w-full max-w-md relative z-10">
         {/* Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg p-3">

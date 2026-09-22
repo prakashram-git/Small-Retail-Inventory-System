@@ -8,7 +8,7 @@ import { UserRole } from '@/lib/types';
 import DatabaseViewer from '@/components/DatabaseViewer';
 
 export default function SettingsPage() {
-  const { settings, updateBrandName, toggleDarkMode, updateShopLocation, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
+  const { settings, updateBrandName, toggleDarkMode, updateShopLocation, updateLoginBackground, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
   const { addToast } = useInventoryStore();
 
   const [brandName, setBrandName] = useState(settings.brandName);
@@ -95,6 +95,21 @@ export default function SettingsPage() {
                 >
                   {settings.darkMode ? 'Disable' : 'Enable'}
                 </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Login Screen Background</label>
+                <select
+                  value={settings.loginBackground || 'gradient'}
+                  onChange={(e) => updateLoginBackground(e.target.value as 'gradient' | 'retail' | 'modern' | 'minimal')}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="gradient">Blue Gradient</option>
+                  <option value="retail">Retail Theme</option>
+                  <option value="modern">Modern Dark</option>
+                  <option value="minimal">Minimal Clean</option>
+                </select>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Choose the background style for login screen</p>
               </div>
             </div>
           </div>

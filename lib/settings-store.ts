@@ -10,6 +10,7 @@ interface SettingsState {
   updateBrandName: (name: string) => void;
   toggleDarkMode: () => void;
   updateShopLocation: (location: string) => void;
+  updateLoginBackground: (background: 'gradient' | 'retail' | 'modern' | 'minimal') => void;
 
   // User Management Actions
   addUser: (name: string, email: string, role: UserRole) => void;
@@ -78,12 +79,19 @@ const getInitialShopLocation = () => {
   return saved ? JSON.parse(saved) : 'Singapore Central Mall';
 };
 
+const getInitialLoginBackground = () => {
+  if (typeof window === 'undefined') return 'gradient';
+  const saved = localStorage.getItem('redhill-loginBackground');
+  return saved ? JSON.parse(saved) : 'gradient';
+};
+
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   settings: {
     brandName: getInitialBrandName(),
     shopLocation: getInitialShopLocation(),
     darkMode: getInitialDarkMode(),
     theme: getInitialDarkMode() ? 'dark' : 'light',
+    loginBackground: getInitialLoginBackground(),
   },
   users: MOCK_USERS,
   currentUser: MOCK_USERS[0],
@@ -119,6 +127,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     }
     set((state) => ({
       settings: { ...state.settings, shopLocation: location },
+    }));
+  },
+
+  updateLoginBackground: (background) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('redhill-loginBackground', JSON.stringify(background));
+    }
+    set((state) => ({
+      settings: { ...state.settings, loginBackground: background },
     }));
   },
 
