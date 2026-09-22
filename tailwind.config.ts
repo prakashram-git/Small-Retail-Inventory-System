@@ -25,6 +25,9 @@ const config: Config = {
         'xl': '0.75rem',
         '2xl': '1rem',
       },
+      fontSize: {
+        '2xs': ['10px', { lineHeight: '14px' }],
+      },
       keyframes: {
         pulse: {
           '0%, 100%': { opacity: '1' },
