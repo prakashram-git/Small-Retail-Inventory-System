@@ -15,12 +15,16 @@ import Toast from '@/components/Toast';
 import { useInventoryStore } from '@/lib/store';
 import { useSettingsStore } from '@/lib/settings-store';
 import { formatCurrency } from '@/lib/utils';
+import { usePersistence } from '@/lib/usePersistence';
 
 interface DashboardClientProps {
   children: ReactNode;
 }
 
 export default function DashboardClient({ children }: DashboardClientProps) {
+  // Initialize persistence (loads saved data on mount)
+  usePersistence();
+
   const [isSaleOpen, setIsSaleOpen] = useState(false);
   const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);

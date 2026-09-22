@@ -63,6 +63,17 @@ interface InventoryState {
   removeToast: (id: string) => void;
   getRecentMovements: (limit?: number) => StockMovement[];
   updateNotificationBadge: () => void;
+
+  // Persistence Actions
+  setInventoryData: (data: {
+    products: Product[];
+    movements: StockMovement[];
+    purchaseOrders?: PurchaseOrder[];
+    goodsReceipts?: GoodsReceipt[];
+    invoices?: Invoice[];
+    stocktakes?: Stocktake[];
+    suppliers: Supplier[];
+  }) => void;
 }
 
 export const useInventoryStore = create<InventoryState>((set, get) => ({
@@ -513,5 +524,19 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
   updateNotificationBadge: () => {
     const lowStockCount = get().getLowStockItems().length;
     set({ notificationBadge: lowStockCount });
+  },
+
+  // ===== PERSISTENCE ACTIONS =====
+  setInventoryData: (data) => {
+    set({
+      products: data.products,
+      movements: data.movements,
+      purchaseOrders: data.purchaseOrders || [],
+      goodsReceipts: data.goodsReceipts || [],
+      invoices: data.invoices || [],
+      stocktakes: data.stocktakes || [],
+      suppliers: data.suppliers,
+    });
+    get().updateNotificationBadge();
   },
 }));
