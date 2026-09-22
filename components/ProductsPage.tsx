@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Plus, Trash2, Edit2, Search, ChevronDown, Filter, X } from 'lucide-react';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
@@ -40,6 +40,17 @@ export default function ProductsPage() {
   const editProduct = useInventoryStore((state) => state.editProduct);
   const deleteProduct = useInventoryStore((state) => state.deleteProduct);
 
+  const getStatusValue = useCallback((product: typeof products[0]): number => {
+    const statusOrder: Record<string, number> = { critical: 0, low: 1, healthy: 2, overstocked: 3 };
+    try {
+      const status = getStockStatus(product.currentStock, product.minStock, product.maxStock, product.reorderLevel);
+      return statusOrder[status] ?? 999;
+    } catch (error) {
+      console.error('Error getting status value:', error);
+      return 999;
+    }
+  }, []);
+
   const filteredAndSorted = useMemo(() => {
     let filtered = products.filter((p) => {
       const matchesSearch =
@@ -55,38 +66,40 @@ export default function ProductsPage() {
       let aVal: string | number = 0;
       let bVal: string | number = 0;
 
-      if (sortField === 'status') {
-        const statusOrder: Record<string, number> = { critical: 0, low: 1, healthy: 2, overstocked: 3 };
-        const aStatus = getStockStatus(a.currentStock, a.minStock, a.maxStock, a.reorderLevel);
-        const bStatus = getStockStatus(b.currentStock, b.minStock, b.maxStock, b.reorderLevel);
-        aVal = statusOrder[aStatus] || 999;
-        bVal = statusOrder[bStatus] || 999;
-      } else {
-        switch (sortField) {
-          case 'name':
-            aVal = a.name;
-            bVal = b.name;
-            break;
-          case 'sku':
-            aVal = a.sku;
-            bVal = b.sku;
-            break;
-          case 'stock':
-            aVal = a.currentStock;
-            bVal = b.currentStock;
-            break;
-          case 'price':
-            aVal = a.unitPrice;
-            bVal = b.unitPrice;
-            break;
-          case 'margin':
-            aVal = a.profitMargin || 0;
-            bVal = b.profitMargin || 0;
-            break;
-          default:
+      switch (sortField) {
+        case 'name':
+          aVal = a.name;
+          bVal = b.name;
+          break;
+        case 'sku':
+          aVal = a.sku;
+          bVal = b.sku;
+          break;
+        case 'stock':
+          aVal = a.currentStock;
+          bVal = b.currentStock;
+          break;
+        case 'price':
+          aVal = a.unitPrice;
+          bVal = b.unitPrice;
+          break;
+        case 'margin':
+          aVal = a.profitMargin || 0;
+          bVal = b.profitMargin || 0;
+          break;
+        case 'status':
+          try {
+            aVal = getStatusValue(a);
+            bVal = getStatusValue(b);
+          } catch (error) {
+            console.error('Error sorting by status:', error);
             aVal = 0;
             bVal = 0;
-        }
+          }
+          break;
+        default:
+          aVal = 0;
+          bVal = 0;
       }
 
       if (typeof aVal === 'string' && typeof bVal === 'string') {
@@ -94,7 +107,7 @@ export default function ProductsPage() {
       }
       return sortOrder === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
-  }, [products, searchTerm, sortField, sortOrder, filterStatus]);
+  }, [products, searchTerm, sortField, sortOrder, filterStatus, getStatusValue]);
 
   const handleAdd = () => {
     if (!formData.sku || !formData.name) {
