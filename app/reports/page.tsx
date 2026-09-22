@@ -197,9 +197,9 @@ export default function ReportsPage() {
           </div>
 
           {/* Date Range Selector - Compact */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl border border-blue-200 dark:border-gray-600 px-3.5 py-2.5 inline-flex items-center gap-3 flex-wrap">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl border border-blue-200 dark:border-gray-600 px-4 py-3 inline-flex items-center gap-2 flex-wrap">
             {/* Quick Range Buttons */}
-            <div className="flex gap-1.5">
+            <div className="flex gap-1">
               {[
                 { label: '7d', value: '7' },
                 { label: '30d', value: '30' },
@@ -212,7 +212,7 @@ export default function ReportsPage() {
                     setDateRange(opt.value);
                     setUseCustomRange(false);
                   }}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-full transition ${
+                  className={`px-1.5 py-0.5 text-xs font-medium rounded-full transition ${
                     !useCustomRange && dateRange === opt.value
                       ? 'bg-blue-600 text-white shadow-sm'
                       : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
@@ -224,11 +224,11 @@ export default function ReportsPage() {
             </div>
 
             {/* Separator */}
-            <div className="w-px h-5 bg-gray-300 dark:bg-gray-600"></div>
+            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
 
             {/* Custom Date Range */}
-            <div className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+            <div className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-gray-600 dark:text-gray-400" />
               <input
                 type="date"
                 value={customStartDate}
@@ -236,7 +236,7 @@ export default function ReportsPage() {
                   setCustomStartDate(e.target.value);
                   setUseCustomRange(true);
                 }}
-                className="w-24 px-2 py-1 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-20 px-1.5 py-0.5 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-xs text-gray-500 dark:text-gray-400">-</span>
               <input
@@ -246,7 +246,7 @@ export default function ReportsPage() {
                   setCustomEndDate(e.target.value);
                   setUseCustomRange(true);
                 }}
-                className="w-24 px-2 py-1 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-20 px-1.5 py-0.5 text-xs border-0 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -258,42 +258,47 @@ export default function ReportsPage() {
                   setCustomEndDate('');
                   setUseCustomRange(false);
                 }}
-                className="px-2 py-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full hover:bg-red-200 dark:hover:bg-red-900/50 transition font-medium"
+                className="px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full hover:bg-red-200 dark:hover:bg-red-900/50 transition font-medium"
               >
                 ✕
               </button>
             )}
+
+            {/* Separator */}
+            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+
+            {/* Generate Report Button */}
+            <button
+              onClick={handleGenerateReport}
+              className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-sm"
+            >
+              📊 Generate
+            </button>
+
+            {/* Advanced Options Button */}
+            <button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="px-2 py-1 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-xs font-medium transition"
+            >
+              {showAdvanced ? '▼' : '▶'} Options
+            </button>
           </div>
 
           {/* Generate Report Section */}
-          <div className="mt-4 space-y-3">
-            <div className="flex gap-3 items-start">
-              <button
-                onClick={handleGenerateReport}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
-              >
-                📊 Generate Report
-              </button>
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="px-4 py-2 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
-              >
-                {showAdvanced ? '▼' : '▶'} Advanced Options
-              </button>
-            </div>
+          <div className="mt-3 space-y-2">{/* Placeholder for advanced options below */}
 
             {/* Advanced Options Panel */}
             {showAdvanced && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Filter Report By:</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-3 mt-3">
+                <h3 className="text-xs font-semibold text-gray-900 dark:text-white mb-2">Filter By:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {/* Supplier Filter */}
                   <div>
                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier</label>
                     <select
                       value={selectedSupplier}
                       onChange={(e) => setSelectedSupplier(e.target.value)}
-                      className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">All Suppliers</option>
                       {suppliers.map((s) => (
@@ -310,7 +315,7 @@ export default function ReportsPage() {
                     <select
                       value={selectedProduct}
                       onChange={(e) => setSelectedProduct(e.target.value)}
-                      className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">All Products</option>
                       {products.map((p) => (
@@ -323,8 +328,8 @@ export default function ReportsPage() {
 
                   {/* Company/Location (from settings) */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Report Type</label>
-                    <select className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+                    <select className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Locations</option>
                       <option>Central Mall</option>
                       <option>East Branch</option>
@@ -333,12 +338,12 @@ export default function ReportsPage() {
                   </div>
                 </div>
 
-                <div className="mt-3 flex gap-2">
+                <div className="mt-2 flex gap-2">
                   <button
                     onClick={handleGenerateReport}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
+                    className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
                   >
-                    ✓ Apply & Generate
+                    ✓ Apply
                   </button>
                   <button
                     onClick={() => {
@@ -346,9 +351,9 @@ export default function ReportsPage() {
                       setSelectedProduct('');
                       setShowAdvanced(false);
                     }}
-                    className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-xs font-medium transition"
+                    className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-xs font-medium transition"
                   >
-                    Reset Filters
+                    Reset
                   </button>
                 </div>
               </div>
@@ -367,119 +372,101 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Inventory Value</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(metrics.totalValue)}</p>
-              </div>
-              <Package className="w-10 h-10 text-blue-500 opacity-20" />
+        {/* KPI Cards - Compact */}
+        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 p-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl p-3 border border-blue-200/50 dark:border-blue-700/30">
+              <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">Inventory Value</p>
+              <p className="text-lg font-bold text-blue-900 dark:text-blue-100 mt-0.5">{formatCurrency(metrics.totalValue)}</p>
             </div>
-          </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Sales ({dateRange}d)</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(salesReport.totalSales)}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{salesReport.totalItems} units</p>
-              </div>
-              <TrendingUp className="w-10 h-10 text-green-500 opacity-20" />
+            <div className="bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl p-3 border border-green-200/50 dark:border-green-700/30">
+              <p className="text-xs text-green-700 dark:text-green-300 font-medium">Total Sales ({dateRange}d)</p>
+              <p className="text-lg font-bold text-green-900 dark:text-green-100 mt-0.5">{formatCurrency(salesReport.totalSales)}</p>
+              <p className="text-xs text-green-600 dark:text-green-400 mt-0.5">{salesReport.totalItems} units</p>
             </div>
-          </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Low Stock Items</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{metrics.lowStockCount}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">need reorder</p>
-              </div>
-              <AlertCircle className="w-10 h-10 text-orange-500 opacity-20" />
+            <div className="bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 rounded-2xl p-3 border border-orange-200/50 dark:border-orange-700/30">
+              <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">Low Stock</p>
+              <p className="text-lg font-bold text-orange-900 dark:text-orange-100 mt-0.5">{metrics.lowStockCount}</p>
+              <p className="text-xs text-orange-600 dark:text-orange-400 mt-0.5">items</p>
             </div>
-          </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Inventory Turnover</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{metrics.turnoverRatio.toFixed(2)}x</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">per month</p>
-              </div>
-              <TrendingDown className="w-10 h-10 text-purple-500 opacity-20" />
+            <div className="bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl p-3 border border-purple-200/50 dark:border-purple-700/30">
+              <p className="text-xs text-purple-700 dark:text-purple-300 font-medium">Turnover</p>
+              <p className="text-lg font-bold text-purple-900 dark:text-purple-100 mt-0.5">{metrics.turnoverRatio.toFixed(2)}x</p>
+              <p className="text-xs text-purple-600 dark:text-purple-400 mt-0.5">per month</p>
             </div>
           </div>
         </div>
 
-        {/* Main Reports Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Main Reports Grid - Compact */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Sales Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Sales by Category</h2>
-            <div className="space-y-3">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">📊 Sales by Category</h2>
+            <div className="space-y-2">
               {Object.entries(salesReport.byCategory).length > 0 ? (
                 Object.entries(salesReport.byCategory).map(([category, units]) => (
                   <div key={category}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-200">{category}</span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{units} units</span>
+                    <div className="flex justify-between mb-0.5">
+                      <span className="text-xs font-medium text-gray-900 dark:text-gray-200">{category}</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">{units}</span>
                     </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${(units / salesReport.totalItems) * 100}%` }}></div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                      <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${(units / salesReport.totalItems) * 100}%` }}></div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No sales in selected period</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">No sales</p>
               )}
             </div>
           </div>
 
           {/* Low Stock Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">⚠️ Low Stock Items ({lowStockReport.length})</h2>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">⚠️ Low Stock ({lowStockReport.length})</h2>
+            <div className="space-y-1 max-h-40 overflow-y-auto">
               {lowStockReport.slice(0, 5).map((p) => (
-                <div key={p.id} className="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                <div key={p.id} className="flex justify-between items-center p-1 bg-red-50 dark:bg-red-900/20 rounded text-xs">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{p.name}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{p.currentStock} units</p>
                   </div>
-                  <span className="text-xs font-bold text-red-600 dark:text-red-400">Below {p.reorderLevel}</span>
+                  <span className="text-xs font-bold text-red-600 dark:text-red-400">-{p.reorderLevel - p.currentStock}</span>
                 </div>
               ))}
               {lowStockReport.length > 5 && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center pt-2">+{lowStockReport.length - 5} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center pt-1">+{lowStockReport.length - 5}</p>
               )}
             </div>
           </div>
 
           {/* Profit Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">💰 Top Profit Margins</h2>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">💰 Top Margins</h2>
+            <div className="space-y-1 max-h-40 overflow-y-auto">
               {profitReport.slice(0, 5).map((p) => (
-                <div key={p.id} className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-900/20 rounded">
+                <div key={p.id} className="flex justify-between items-center p-1 bg-green-50 dark:bg-green-900/20 rounded text-xs">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">${p.cost} → ${p.unitPrice}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{p.name}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">${p.cost}→${p.unitPrice}</p>
                   </div>
-                  <span className="text-sm font-bold text-green-600 dark:text-green-400">{p.profitMargin}%</span>
+                  <span className="font-bold text-green-600 dark:text-green-400">{p.profitMargin}%</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Supplier Performance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">🚚 Supplier Performance</h2>
-            <div className="space-y-3">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">🚚 Suppliers</h2>
+            <div className="space-y-2">
               {supplierPerformance.slice(0, 3).map((s) => (
-                <div key={s.id} className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
-                  <div className="flex justify-between items-start mb-2">
-                    <p className="font-medium text-gray-900 dark:text-white text-sm">{s.name}</p>
+                <div key={s.id} className="p-2 bg-gray-50 dark:bg-gray-700 rounded text-xs">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="font-medium text-gray-900 dark:text-white">{s.name}</p>
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => (
                         <span key={i} className={`text-xs ${i < Math.round(s.rating) ? '⭐' : '☆'}`}></span>
@@ -487,7 +474,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   <div className="text-xs text-gray-600 dark:text-gray-400">
-                    <p>On-time: {s.onTimeDelivery}% | Quality: {Math.round(s.qualityScore)}%</p>
+                    <p>Time: {s.onTimeDelivery}% | Quality: {Math.round(s.qualityScore)}%</p>
                   </div>
                 </div>
               ))}
@@ -495,29 +482,29 @@ export default function ReportsPage() {
           </div>
 
           {/* Inventory Aging */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📦 Oldest Stock (Aging)</h2>
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">📦 Stock Aging</h2>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="px-4 py-2 text-left text-gray-600 dark:text-gray-400">Product</th>
-                    <th className="px-4 py-2 text-center text-gray-600 dark:text-gray-400">Stock</th>
-                    <th className="px-4 py-2 text-center text-gray-600 dark:text-gray-400">Days In Stock</th>
-                    <th className="px-4 py-2 text-right text-gray-600 dark:text-gray-400">Value</th>
+                    <th className="px-2 py-1 text-left text-gray-600 dark:text-gray-400">Product</th>
+                    <th className="px-2 py-1 text-center text-gray-600 dark:text-gray-400">Stock</th>
+                    <th className="px-2 py-1 text-center text-gray-600 dark:text-gray-400">Days</th>
+                    <th className="px-2 py-1 text-right text-gray-600 dark:text-gray-400">Value</th>
                   </tr>
                 </thead>
                 <tbody>
                   {inventoryAging.map((p) => (
                     <tr key={p.id} className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="px-4 py-3 text-gray-900 dark:text-white">{p.name}</td>
-                      <td className="px-4 py-3 text-center text-gray-600 dark:text-gray-400">{p.currentStock}</td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-2 py-1 text-gray-900 dark:text-white text-xs">{p.name}</td>
+                      <td className="px-2 py-1 text-center text-gray-600 dark:text-gray-400 text-xs">{p.currentStock}</td>
+                      <td className="px-2 py-1 text-center">
                         <span className={`text-xs font-bold ${p.daysInStock > 30 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                          {p.daysInStock} days
+                          {p.daysInStock}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{formatCurrency(p.currentStock * p.unitPrice)}</td>
+                      <td className="px-2 py-1 text-right text-gray-900 dark:text-white text-xs">{formatCurrency(p.currentStock * p.unitPrice)}</td>
                     </tr>
                   ))}
                 </tbody>
