@@ -4,18 +4,24 @@ import Header from '@/components/Header';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { useMemo, useState } from 'react';
-import { TrendingUp, TrendingDown, AlertCircle, Truck, Package, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Truck, Package, Calendar, Filter } from 'lucide-react';
+import { useSettingsStore } from '@/lib/settings-store';
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('30');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
   const [useCustomRange, setUseCustomRange] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState('');
+  const [reportGenerated, setReportGenerated] = useState(false);
+  const { settings } = useSettingsStore();
   const metrics = useInventoryStore((state) => state.getInventoryMetrics());
   const products = useInventoryStore((state) => state.products);
   const suppliers = useInventoryStore((state) => state.suppliers);
   const movements = useInventoryStore((state) => state.movements);
-  const salesReport = useInventoryStore((state) => {
+  const salesReport = useMemo(() => {
     let startDate: Date;
     let endDate: Date;
 
@@ -28,33 +34,79 @@ export default function ReportsPage() {
       startDate.setDate(startDate.getDate() - parseInt(dateRange));
     }
 
-    return state.getSalesReport(startDate, endDate);
-  });
+    const baseReport = useInventoryStore.getState().getSalesReport(startDate, endDate);
+
+    // Apply product and supplier filters
+    if (!selectedProduct && !selectedSupplier) {
+      return baseReport;
+    }
+
+    const filteredByCategory: Record<string, number> = {};
+    Object.entries(baseReport.byCategory).forEach(([category, units]) => {
+      const categoryProducts = products.filter((p) => {
+        if (p.category !== category) return false;
+        if (selectedProduct && p.id !== selectedProduct) return false;
+        if (selectedSupplier && p.supplierId !== selectedSupplier) return false;
+        return true;
+      });
+      if (categoryProducts.length > 0) {
+        filteredByCategory[category] = units;
+      }
+    });
+
+    const filteredTotal = Object.values(filteredByCategory).reduce((a, b) => a + b, 0);
+
+    return {
+      ...baseReport,
+      byCategory: filteredByCategory,
+      totalItems: filteredTotal,
+      totalSales: (filteredTotal / (baseReport.totalItems || 1)) * baseReport.totalSales,
+    };
+  }, [useCustomRange, customStartDate, customEndDate, dateRange, selectedProduct, selectedSupplier, products]);
 
   const lowStockReport = useMemo(() => {
     return products
-      .filter((p) => p.currentStock <= p.reorderLevel && p.status === 'active')
+      .filter((p) => {
+        if (p.currentStock > p.reorderLevel || p.status !== 'active') return false;
+        if (selectedProduct && p.id !== selectedProduct) return false;
+        if (selectedSupplier && p.supplierId !== selectedSupplier) return false;
+        return true;
+      })
       .map((p) => ({
         ...p,
         daysToStockout: p.currentStock > 0 ? Math.ceil(p.currentStock / (p.currentStock > 0 ? 1 : 0)) : 0,
       }));
-  }, [products]);
+  }, [products, selectedProduct, selectedSupplier]);
 
   const profitReport = useMemo(() => {
     return products
-      .filter((p) => p.profitMargin !== undefined)
+      .filter((p) => {
+        if (p.profitMargin === undefined) return false;
+        if (selectedProduct && p.id !== selectedProduct) return false;
+        if (selectedSupplier && p.supplierId !== selectedSupplier) return false;
+        return true;
+      })
       .sort((a, b) => (b.profitMargin || 0) - (a.profitMargin || 0));
-  }, [products]);
+  }, [products, selectedProduct, selectedSupplier]);
 
   const supplierPerformance = useMemo(() => {
-    return suppliers.map((s) => {
+    const filtered = selectedSupplier
+      ? suppliers.filter((s) => s.id === selectedSupplier)
+      : suppliers;
+
+    return filtered.map((s) => {
       const perf = useInventoryStore.getState().getSupplierPerformance(s.id);
       return { ...s, ...perf };
     });
-  }, [suppliers]);
+  }, [suppliers, selectedSupplier]);
 
   const inventoryAging = useMemo(() => {
     return products
+      .filter((p) => {
+        if (selectedProduct && p.id !== selectedProduct) return false;
+        if (selectedSupplier && p.supplierId !== selectedSupplier) return false;
+        return true;
+      })
       .map((p) => ({
         ...p,
         daysInStock: p.lastRestockDate
@@ -63,7 +115,7 @@ export default function ReportsPage() {
       }))
       .sort((a, b) => b.daysInStock - a.daysInStock)
       .slice(0, 10);
-  }, [products]);
+  }, [products, selectedProduct, selectedSupplier]);
 
   return (
     <>
@@ -143,6 +195,107 @@ export default function ReportsPage() {
               >
                 ✕
               </button>
+            )}
+          </div>
+
+          {/* Generate Report Section */}
+          <div className="mt-4 space-y-3">
+            <div className="flex gap-3 items-start">
+              <button
+                onClick={() => setReportGenerated(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
+              >
+                📊 Generate Report
+              </button>
+              <button
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                className="px-4 py-2 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
+              >
+                {showAdvanced ? '▼' : '▶'} Advanced Options
+              </button>
+            </div>
+
+            {/* Advanced Options Panel */}
+            {showAdvanced && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Filter Report By:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Supplier Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier</label>
+                    <select
+                      value={selectedSupplier}
+                      onChange={(e) => setSelectedSupplier(e.target.value)}
+                      className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Suppliers</option>
+                      {suppliers.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Product Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Product</label>
+                    <select
+                      value={selectedProduct}
+                      onChange={(e) => setSelectedProduct(e.target.value)}
+                      className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">All Products</option>
+                      {products.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Company/Location (from settings) */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Report Type</label>
+                    <select className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>All Locations</option>
+                      <option>Central Mall</option>
+                      <option>East Branch</option>
+                      <option>West Branch</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setReportGenerated(true)}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-medium transition"
+                  >
+                    ✓ Apply & Generate
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedSupplier('');
+                      setSelectedProduct('');
+                      setShowAdvanced(false);
+                    }}
+                    className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-xs font-medium transition"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {reportGenerated && (selectedSupplier || selectedProduct) && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-800 dark:text-blue-300">
+                  📋 Report filtered by:
+                  {selectedSupplier && ` Supplier: ${suppliers.find(s => s.id === selectedSupplier)?.name}`}
+                  {selectedSupplier && selectedProduct && ' •'}
+                  {selectedProduct && ` Product: ${products.find(p => p.id === selectedProduct)?.name}`}
+                </p>
+              </div>
             )}
           </div>
         </div>
