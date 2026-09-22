@@ -563,8 +563,22 @@ export default function ProductsPage() {
                   <th className="px-2 py-2 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('name')}>
                     Product
                   </th>
-                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('status')}>
+                  <th
+                    className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition relative group"
+                    onClick={() => setSortField('status')}
+                    title="Click to sort by status"
+                  >
                     Status
+                    {/* Hover tooltip info */}
+                    <div className="absolute hidden group-hover:block bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-100 text-xs rounded-lg shadow-lg p-3 whitespace-nowrap z-50 pointer-events-none">
+                      <div className="font-semibold mb-1.5">Stock Status Levels:</div>
+                      <div className="space-y-1 text-xs">
+                        <div>🔴 <span className="font-medium">Critical:</span> Below reorder</div>
+                        <div>🟡 <span className="font-medium">Low:</span> Below minimum</div>
+                        <div>🟢 <span className="font-medium">Healthy:</span> Optimal range</div>
+                        <div>🔵 <span className="font-medium">Overstocked:</span> Above maximum</div>
+                      </div>
+                    </div>
                   </th>
                   <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('stock')}>
                     Qty
