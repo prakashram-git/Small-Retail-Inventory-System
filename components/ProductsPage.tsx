@@ -263,6 +263,12 @@ export default function ProductsPage() {
 
   console.log('ProductsPage rendering - products count:', products.length);
 
+  // Show alert once to confirm component loaded
+  if (typeof window !== 'undefined' && !window.productPageLoaded) {
+    window.productPageLoaded = true;
+    console.log('PRODUCTS PAGE LOADED - addProduct function:', typeof addProduct);
+  }
+
   return (
     <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
       {/* Debug Info - Product Count */}
