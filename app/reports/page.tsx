@@ -188,16 +188,16 @@ export default function ReportsPage() {
     <>
       <Header />
       <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
-        <div className="mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Comprehensive inventory analysis and performance metrics</p>
+              <h1 className="heading-page">Reports & Analytics</h1>
+              <p className="text-caption mt-1">Comprehensive inventory analysis and performance metrics</p>
             </div>
           </div>
 
           {/* Date Range Selector */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-blue-200 dark:border-gray-600 px-6 py-3 flex items-center gap-4 flex-wrap">
+          <div className="card card-standard bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 px-4 py-3 flex items-center grid-compact flex-wrap">
             {/* Quick Range Buttons */}
             <div className="flex gap-2">
               {[
@@ -365,36 +365,36 @@ export default function ReportsPage() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-lg p-6 border border-blue-200/50 dark:border-blue-700/30">
-            <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">Total Inventory Value</p>
-            <p className="text-3xl font-bold text-blue-900 dark:text-blue-100 mt-2">{formatCurrency(metrics.totalValue)}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="card card-standard bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 border-blue-200/50 dark:border-blue-700/30">
+            <p className="text-label text-blue-700 dark:text-blue-300">Inventory Value</p>
+            <p className="text-2xl font-bold text-blue-900 dark:text-blue-100 mt-1">{formatCurrency(metrics.totalValue)}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 rounded-lg p-6 border border-green-200/50 dark:border-green-700/30">
-            <p className="text-sm text-green-700 dark:text-green-300 font-medium">Total Sales ({dateRange}d)</p>
-            <p className="text-3xl font-bold text-green-900 dark:text-green-100 mt-2">{formatCurrency(salesReport.totalSales)}</p>
-            <p className="text-xs text-green-600 dark:text-green-400 mt-2">{salesReport.totalItems} units sold</p>
+          <div className="card card-standard bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 border-green-200/50 dark:border-green-700/30">
+            <p className="text-label text-green-700 dark:text-green-300">Sales ({dateRange}d)</p>
+            <p className="text-2xl font-bold text-green-900 dark:text-green-100 mt-1">{formatCurrency(salesReport.totalSales)}</p>
+            <p className="text-caption text-green-600 dark:text-green-400 mt-1">{salesReport.totalItems} units</p>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 rounded-lg p-6 border border-orange-200/50 dark:border-orange-700/30">
-            <p className="text-sm text-orange-700 dark:text-orange-300 font-medium">Low Stock Items</p>
-            <p className="text-3xl font-bold text-orange-900 dark:text-orange-100 mt-2">{metrics.lowStockCount}</p>
-            <p className="text-xs text-orange-600 dark:text-orange-400 mt-2">need reordering</p>
+          <div className="card card-standard bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-orange-200/50 dark:border-orange-700/30">
+            <p className="text-label text-orange-700 dark:text-orange-300">Low Stock</p>
+            <p className="text-2xl font-bold text-orange-900 dark:text-orange-100 mt-1">{metrics.lowStockCount}</p>
+            <p className="text-caption text-orange-600 dark:text-orange-400 mt-1">items to reorder</p>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 rounded-lg p-6 border border-purple-200/50 dark:border-purple-700/30">
-            <p className="text-sm text-purple-700 dark:text-purple-300 font-medium">Inventory Turnover</p>
-            <p className="text-3xl font-bold text-purple-900 dark:text-purple-100 mt-2">{metrics.turnoverRatio.toFixed(2)}x</p>
-            <p className="text-xs text-purple-600 dark:text-purple-400 mt-2">per month</p>
+          <div className="card card-standard bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 border-purple-200/50 dark:border-purple-700/30">
+            <p className="text-label text-purple-700 dark:text-purple-300">Turnover Ratio</p>
+            <p className="text-2xl font-bold text-purple-900 dark:text-purple-100 mt-1">{metrics.turnoverRatio.toFixed(2)}x</p>
+            <p className="text-caption text-purple-600 dark:text-purple-400 mt-1">per month</p>
           </div>
         </div>
 
         {/* Main Reports Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 grid-spacious">
           {/* Sales Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📊 Sales by Category</h2>
+          <div className="card card-standard">
+            <h2 className="heading-section mb-4">📊 Sales by Category</h2>
             <div className="space-y-4">
               {Object.entries(salesReport.byCategory).length > 0 ? (
                 Object.entries(salesReport.byCategory).map(([category, units]) => (
@@ -415,8 +415,8 @@ export default function ReportsPage() {
           </div>
 
           {/* Low Stock Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">⚠️ Low Stock Items ({lowStockReport.length})</h2>
+          <div className="card card-standard">
+            <h2 className="heading-section mb-4">⚠️ Low Stock ({lowStockReport.length})</h2>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {lowStockReport.slice(0, 5).map((p) => (
                 <div key={p.id} className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
@@ -434,8 +434,8 @@ export default function ReportsPage() {
           </div>
 
           {/* Profit Report */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">💰 Top Profit Margins</h2>
+          <div className="card card-standard">
+            <h2 className="heading-section mb-4">💰 Top Margins</h2>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {profitReport.slice(0, 5).map((p) => (
                 <div key={p.id} className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
@@ -450,8 +450,8 @@ export default function ReportsPage() {
           </div>
 
           {/* Supplier Performance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">🚚 Supplier Performance</h2>
+          <div className="card card-standard">
+            <h2 className="heading-section mb-4">🚚 Suppliers</h2>
             <div className="space-y-4">
               {supplierPerformance.slice(0, 3).map((s) => (
                 <div key={s.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -473,8 +473,8 @@ export default function ReportsPage() {
           </div>
 
           {/* Inventory Aging */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📦 Oldest Stock (Inventory Aging)</h2>
+          <div className="lg:col-span-2 card card-standard">
+            <h2 className="heading-section mb-4">📦 Stock Aging</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

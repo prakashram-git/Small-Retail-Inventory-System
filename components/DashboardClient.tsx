@@ -85,16 +85,16 @@ export default function DashboardClient({ children }: DashboardClientProps) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {children}
 
-      <main className="px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
-        {/* Debug Info */}
-        <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded text-2xs">
-          <p className="font-mono text-green-900 dark:text-green-300">
-            Store: {products.length} products | {movements.length} movements
+      <main className="px-4 sm:px-6 py-4 sm:py-5">
+        {/* Debug Info - Compact */}
+        <div className="mb-4 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+          <p className="font-mono text-xs text-green-700 dark:text-green-400">
+            Products: {products.length} | Movements: {movements.length}
           </p>
         </div>
 
         {/* Top Metrics Grid */}
-        <div className="grid grid-cols-4 gap-1 mb-3 overflow-x-auto pb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 grid-compact mb-5 overflow-x-auto pb-0">
           <MetricsCard
             title="Total Products"
             value={products.length}

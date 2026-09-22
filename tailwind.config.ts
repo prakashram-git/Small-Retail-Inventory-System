@@ -15,6 +15,16 @@ const config: Config = {
           light: '#FFCDD2',
         }
       },
+      spacing: {
+        'page': '1rem',
+        'card': '1.25rem',
+        'card-compact': '1rem',
+      },
+      borderRadius: {
+        'lg': '0.5rem',
+        'xl': '0.75rem',
+        '2xl': '1rem',
+      },
       keyframes: {
         pulse: {
           '0%, 100%': { opacity: '1' },
