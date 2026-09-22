@@ -77,49 +77,49 @@ export default function StockMovementsPage() {
   if (!mounted) return null;
 
   return (
-    <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
+    <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-2 sm:px-3 py-2 sm:py-3 transition-colors duration-200">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Stock Movements</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Track purchases, sales, and adjustments</p>
+      <div className="mb-2">
+        <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Stock Movements</h1>
+        <p className="text-2xs text-gray-600 dark:text-gray-400 mt-0.5">Track purchases, sales, and adjustments</p>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Total Purchases</p>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">{totals.purchases}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units added</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
+        <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-sm p-2">
+          <p className="text-2xs text-gray-600 dark:text-gray-400">Total Purchases</p>
+          <p className="text-lg font-bold text-green-600 dark:text-green-400 mt-1">{totals.purchases}</p>
+          <p className="text-2xs text-gray-500 dark:text-gray-500 mt-0.5">units added</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Total Sales</p>
-          <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">{totals.sales}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units sold</p>
+        <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-sm p-2">
+          <p className="text-2xs text-gray-600 dark:text-gray-400">Total Sales</p>
+          <p className="text-lg font-bold text-red-600 dark:text-red-400 mt-1">{totals.sales}</p>
+          <p className="text-2xs text-gray-500 dark:text-gray-500 mt-0.5">units sold</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Total Adjustments</p>
-          <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">{totals.adjustments}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">units adjusted</p>
+        <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-sm p-2">
+          <p className="text-2xs text-gray-600 dark:text-gray-400">Total Adjustments</p>
+          <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400 mt-1">{totals.adjustments}</p>
+          <p className="text-2xs text-gray-500 dark:text-gray-500 mt-0.5">units adjusted</p>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row gap-2 mb-2">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search by SKU or product..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="w-full pl-7 pr-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
           />
         </div>
 
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as any)}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          className="px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
         >
           <option value="all">All Types</option>
           <option value="purchase">Purchases</option>
@@ -129,60 +129,60 @@ export default function StockMovementsPage() {
 
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-dark transition font-medium"
+          className="flex items-center gap-1 px-2 py-1 bg-brand-primary text-white rounded hover:bg-brand-dark transition font-medium text-xs"
         >
-          <Plus className="w-4 h-4" />
-          Log Movement
+          <Plus className="w-3 h-3" />
+          Log
         </button>
       </div>
 
       {/* Current Inventory Section */}
-      <div className="mb-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Package className="w-4 h-4 text-gray-900 dark:text-white" />
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Current Inventory</h2>
-          <span className="text-2xs text-gray-600 dark:text-gray-400">({products.length} items)</span>
+      <div className="mb-2">
+        <div className="flex items-center gap-2 mb-1">
+          <Package className="w-3 h-3 text-gray-900 dark:text-white" />
+          <h2 className="text-xs font-semibold text-gray-900 dark:text-white">Current Inventory</h2>
+          <span className="text-2xs text-gray-600 dark:text-gray-400">({products.length})</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1">
           {products.map((product) => (
             <div key={product.id} className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-1">
-              <p className="font-mono text-2xs font-bold text-gray-600 dark:text-gray-400 truncate" style={{ fontSize: '70%' }}>{product.sku}</p>
-              <p className="text-2xs font-semibold text-gray-900 dark:text-white truncate" style={{ fontSize: '70%' }}>{product.name}</p>
+              <p className="font-mono text-2xs font-bold text-gray-600 dark:text-gray-400 truncate">{product.sku}</p>
+              <p className="text-2xs font-semibold text-gray-900 dark:text-white truncate">{product.name}</p>
               <div className="grid grid-cols-2 gap-0.5 text-2xs mt-0.5">
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400 text-2xs" style={{ fontSize: '65%' }}>Stock:</span>
-                  <p className="font-bold text-gray-900 dark:text-white text-2xs" style={{ fontSize: '70%' }}>{product.currentStock}</p>
+                  <span className="text-gray-600 dark:text-gray-400 text-2xs">Stock:</span>
+                  <p className="font-bold text-gray-900 dark:text-white text-2xs">{product.currentStock}</p>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-400 text-2xs" style={{ fontSize: '65%' }}>Price:</span>
-                  <p className="font-bold text-green-600 dark:text-green-400 text-2xs" style={{ fontSize: '70%' }}>{formatCurrency(product.unitPrice)}</p>
+                  <span className="text-gray-600 dark:text-gray-400 text-2xs">Price:</span>
+                  <p className="font-bold text-green-600 dark:text-green-400 text-2xs">{formatCurrency(product.unitPrice)}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
         {products.length === 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-3 text-center">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">No products in inventory</p>
+          <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-xs">No products in inventory</p>
           </div>
         )}
       </div>
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full my-8">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Log Stock Movement</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded shadow-xl max-w-sm w-full my-4">
+            <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Log Stock Movement</h2>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-3 space-y-2">
               <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Product *</label>
+                <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-0.5">Product *</label>
                 <select
                   value={formData.productId}
                   onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <option value="">Select a product...</option>
                   {products.map((p) => (
@@ -194,11 +194,11 @@ export default function StockMovementsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Type *</label>
+                <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-0.5">Type *</label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 >
                   <option value="purchase">Purchase (Stock In)</option>
                   <option value="sale">Sale (Stock Out)</option>
@@ -207,39 +207,39 @@ export default function StockMovementsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Quantity *</label>
+                <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-0.5">Quantity *</label>
                 <input
                   type="number"
                   value={formData.quantity}
                   onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                   placeholder="0"
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-1">Notes</label>
+                <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-0.5">Notes</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="e.g., Reason for movement"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
+                  className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                   rows={2}
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex gap-3">
+            <div className="px-3 py-2 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex gap-2">
               <button
                 onClick={() => setShowForm(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition font-medium"
+                className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition font-medium text-xs"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAdd}
-                className="flex-1 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-dark transition font-medium"
+                className="flex-1 px-2 py-1 bg-brand-primary text-white rounded hover:bg-brand-dark transition font-medium text-xs"
               >
                 Log Movement
               </button>
@@ -249,17 +249,17 @@ export default function StockMovementsPage() {
       )}
 
       {/* Movements Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-2xs">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Date & Time</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">SKU</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Product</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Type</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Quantity</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">Notes</th>
+                <th className="px-2 py-1.5 text-left font-semibold text-gray-700 dark:text-gray-300">Date & Time</th>
+                <th className="px-2 py-1.5 text-left font-semibold text-gray-700 dark:text-gray-300">SKU</th>
+                <th className="px-2 py-1.5 text-left font-semibold text-gray-700 dark:text-gray-300">Product</th>
+                <th className="px-2 py-1.5 text-center font-semibold text-gray-700 dark:text-gray-300">Type</th>
+                <th className="px-2 py-1.5 text-right font-semibold text-gray-700 dark:text-gray-300">Quantity</th>
+                <th className="px-2 py-1.5 text-left font-semibold text-gray-700 dark:text-gray-300">Notes</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -267,27 +267,27 @@ export default function StockMovementsPage() {
                 const product = products.find((p) => p.id === movement.productId);
                 return (
                   <tr key={movement.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/50'}>
-                    <td className="px-4 py-3">
-                      <span className="text-sm text-gray-900 dark:text-gray-200">{formatDate(movement.timestamp)}</span>
+                    <td className="px-2 py-1">
+                      <span className="text-gray-900 dark:text-gray-200">{formatDate(movement.timestamp)}</span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-gray-200">{product?.sku || 'N/A'}</span>
+                    <td className="px-2 py-1">
+                      <span className="font-mono font-semibold text-gray-900 dark:text-gray-200">{product?.sku || 'N/A'}</span>
                     </td>
-                    <td className="px-4 py-3">
-                      <p className="text-sm text-gray-900 dark:text-gray-200">{product?.name || 'Unknown'}</p>
+                    <td className="px-2 py-1">
+                      <p className="text-gray-900 dark:text-gray-200 truncate">{product?.name || 'Unknown'}</p>
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getTypeColor(movement.type)}`}>
+                    <td className="px-2 py-1 text-center">
+                      <span className={`font-semibold px-1.5 py-0.5 rounded ${getTypeColor(movement.type)}`}>
                         {movement.type.charAt(0).toUpperCase() + movement.type.slice(1)}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={`text-sm font-bold ${movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    <td className="px-2 py-1 text-right">
+                      <span className={`font-bold ${movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                         {movement.quantity > 0 ? '+' : ''}{movement.quantity}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{movement.notes}</p>
+                    <td className="px-2 py-1">
+                      <p className="text-gray-600 dark:text-gray-400 truncate">{movement.notes}</p>
                     </td>
                   </tr>
                 );
@@ -297,8 +297,8 @@ export default function StockMovementsPage() {
         </div>
 
         {filteredMovements.length === 0 && (
-          <div className="px-6 py-12 text-center">
-            <p className="text-gray-500 dark:text-gray-400">No movements found.</p>
+          <div className="px-2 py-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-xs">No movements found.</p>
           </div>
         )}
       </div>

@@ -85,16 +85,16 @@ export default function DashboardClient({ children }: DashboardClientProps) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {children}
 
-      <main className="px-4 sm:px-6 py-4 sm:py-5">
+      <main className="px-2 sm:px-3 py-2 sm:py-3">
         {/* Debug Info - Compact */}
-        <div className="mb-4 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
-          <p className="font-mono text-xs text-green-700 dark:text-green-400">
+        <div className="mb-2 p-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded">
+          <p className="font-mono text-2xs text-green-700 dark:text-green-400">
             Products: {products.length} | Movements: {movements.length}
           </p>
         </div>
 
         {/* Top Metrics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 grid-compact mb-5 overflow-x-auto pb-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 grid-compact mb-2 overflow-x-auto pb-0">
           <MetricsCard
             title="Total Products"
             value={products.length}
@@ -122,19 +122,19 @@ export default function DashboardClient({ children }: DashboardClientProps) {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-2">
           {/* Top Row - Low Stock Table & Quick Actions + Recent Movements */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
             {/* Left Panel - Low Stock Table */}
             <div className="lg:col-span-3">
               <LowStockTable />
             </div>
 
             {/* Right Panel - Quick Actions & Recent Movements */}
-            <div className="space-y-3 lg:h-fit lg:sticky lg:top-24">
+            <div className="space-y-1.5 lg:h-fit lg:sticky lg:top-20">
               {/* Quick Actions Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4">
-                <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h2>
+              <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-sm p-2">
+                <h2 className="text-xs font-semibold text-gray-900 dark:text-white mb-2">Quick Actions</h2>
                 <QuickActions
                   onSaleOpen={() => setIsSaleOpen(true)}
                   onPurchaseOpen={() => setIsPurchaseOpen(true)}

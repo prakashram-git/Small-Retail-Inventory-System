@@ -231,26 +231,26 @@ export default function ProductsPage() {
     <div className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex flex-col">
       {/* Sticky Header with Search & Filters */}
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="px-2 sm:px-3 py-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             {/* Title */}
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
-              <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full">
+            <div className="flex items-center gap-1">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Products</h1>
+              <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-2xs font-semibold rounded">
                 {filteredAndSorted.length}
               </span>
             </div>
 
             {/* Search Bar - Compact */}
-            <div className="flex-1 sm:flex-none flex items-center gap-2">
-              <div className="relative flex-1 sm:w-48">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <div className="flex-1 sm:flex-none flex items-center gap-1">
+              <div className="relative flex-1 sm:w-40">
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="w-full pl-7 pr-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>
 
@@ -258,14 +258,14 @@ export default function ProductsPage() {
               <button
                 type="button"
                 onClick={() => setShowFilters(!showFilters)}
-                className={`p-2 rounded-full transition ${
+                className={`p-1 rounded transition ${
                   showFilters
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
                 title="Toggle filters"
               >
-                <Filter className="w-4 h-4" />
+                <Filter className="w-3 h-3" />
               </button>
 
               <button
@@ -275,35 +275,35 @@ export default function ProductsPage() {
                   setEditingId(null);
                   setShowForm(!showForm);
                 }}
-                className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition"
+                className="p-1 rounded bg-blue-600 hover:bg-blue-700 text-white transition"
                 title="Add product"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3 h-3" />
               </button>
             </div>
           </div>
 
           {/* Filter Options - Collapsible */}
           {showFilters && (
-            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-2 items-center">
-              <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Filters:</span>
+            <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-1 items-center">
+              <span className="text-2xs font-semibold text-gray-600 dark:text-gray-400">Filters:</span>
 
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as 'all' | 'active' | 'low-stock')}
-                className="px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-1.5 py-0.5 text-2xs border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active Only</option>
                 <option value="low-stock">Low Stock</option>
               </select>
 
-              <div className="flex gap-1">
-                <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Sort:</span>
+              <div className="flex gap-0.5">
+                <span className="text-2xs font-semibold text-gray-600 dark:text-gray-400">Sort:</span>
                 <select
                   value={sortField}
                   onChange={(e) => setSortField(e.target.value as SortField)}
-                  className="px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-1.5 py-0.5 text-2xs border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="name">Name</option>
                   <option value="sku">SKU</option>
@@ -315,7 +315,7 @@ export default function ProductsPage() {
                 <button
                   type="button"
                   onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                  className="px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition font-medium"
+                  className="px-1.5 py-0.5 text-2xs border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition font-medium"
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </button>
@@ -328,9 +328,9 @@ export default function ProductsPage() {
                     setFilterStatus('all');
                     setSearchTerm('');
                   }}
-                  className="ml-auto px-2.5 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded-full hover:bg-red-200 dark:hover:bg-red-800 transition flex items-center gap-1"
+                  className="ml-auto px-1.5 py-0.5 text-2xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-800 transition flex items-center gap-0.5"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-2.5 h-2.5" />
                   Reset
                 </button>
               )}
@@ -340,7 +340,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 sm:px-6 py-4"
+      <div className="flex-1 px-2 sm:px-3 py-2"
 >
 
         {/* Add/Edit Form */}

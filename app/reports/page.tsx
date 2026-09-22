@@ -187,19 +187,19 @@ export default function ReportsPage() {
   return (
     <>
       <Header />
-      <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 transition-colors duration-200">
-        <div className="mb-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+      <main className="bg-gray-50 dark:bg-gray-900 min-h-screen px-2 sm:px-3 py-2 sm:py-3 transition-colors duration-200">
+        <div className="mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
             <div>
               <h1 className="heading-page">Reports & Analytics</h1>
-              <p className="text-caption mt-1">Comprehensive inventory analysis and performance metrics</p>
+              <p className="text-caption mt-0.5">Comprehensive inventory analysis and performance metrics</p>
             </div>
           </div>
 
           {/* Date Range Selector */}
-          <div className="card card-standard bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 px-4 py-3 flex items-center grid-compact flex-wrap">
+          <div className="card card-compact bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 px-2 py-2 flex items-center grid-compact flex-wrap">
             {/* Quick Range Buttons */}
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               {[
                 { label: '7 Days', value: '7' },
                 { label: '30 Days', value: '30' },
@@ -212,7 +212,7 @@ export default function ReportsPage() {
                     setDateRange(opt.value);
                     setUseCustomRange(false);
                   }}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition ${
+                  className={`px-2 py-1 text-xs font-medium rounded transition ${
                     !useCustomRange && dateRange === opt.value
                       ? 'bg-blue-600 text-white shadow-sm'
                       : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
@@ -224,11 +224,11 @@ export default function ReportsPage() {
             </div>
 
             {/* Separator */}
-            <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+            <div className="w-px h-5 bg-gray-300 dark:bg-gray-600"></div>
 
             {/* Custom Date Range */}
-            <div className="flex items-center gap-3">
-              <Calendar className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <div className="flex items-center gap-1">
+              <Calendar className="w-4 h-4 text-gray-600 dark:text-gray-400" />
               <input
                 type="date"
                 value={customStartDate}
@@ -236,9 +236,9 @@ export default function ReportsPage() {
                   setCustomStartDate(e.target.value);
                   setUseCustomRange(true);
                 }}
-                className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="text-gray-500 dark:text-gray-400">to</span>
+              <span className="text-gray-500 dark:text-gray-400 text-xs">to</span>
               <input
                 type="date"
                 value={customEndDate}
@@ -246,7 +246,7 @@ export default function ReportsPage() {
                   setCustomEndDate(e.target.value);
                   setUseCustomRange(true);
                 }}
-                className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {useCustomRange && (
                 <button
@@ -255,7 +255,7 @@ export default function ReportsPage() {
                     setCustomEndDate('');
                     setUseCustomRange(false);
                   }}
-                  className="px-2 py-1 text-sm bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition font-medium"
+                  className="px-1 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/50 transition font-medium"
                 >
                   ✕ Clear
                 </button>
@@ -263,16 +263,16 @@ export default function ReportsPage() {
             </div>
 
             {/* Generate & Filter Buttons */}
-            <div className="flex gap-2 ml-auto">
+            <div className="flex gap-1 ml-auto">
               <button
                 onClick={handleGenerateReport}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
+                className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition shadow-sm"
               >
                 📊 Generate Report
               </button>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="px-4 py-2 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition"
+                className="px-2 py-1 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded text-xs font-medium transition"
               >
                 {showAdvanced ? '▼' : '▶'} Filters
               </button>
@@ -281,16 +281,16 @@ export default function ReportsPage() {
 
           {/* Advanced Options Panel */}
           {showAdvanced && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Advanced Filters</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-2 mt-2">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Advanced Filters</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {/* Supplier Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Supplier</label>
+                  <label className="block text-2xs font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier</label>
                   <select
                     value={selectedSupplier}
                     onChange={(e) => setSelectedSupplier(e.target.value)}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">All Suppliers</option>
                     {suppliers.map((s) => (
@@ -303,11 +303,11 @@ export default function ReportsPage() {
 
                 {/* Product Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product</label>
+                  <label className="block text-2xs font-medium text-gray-700 dark:text-gray-300 mb-1">Product</label>
                   <select
                     value={selectedProduct}
                     onChange={(e) => setSelectedProduct(e.target.value)}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">All Products</option>
                     {products.map((p) => (
@@ -320,8 +320,8 @@ export default function ReportsPage() {
 
                 {/* Location Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
-                  <select className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <label className="block text-2xs font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                  <select className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>All Locations</option>
                     <option>Central Mall</option>
                     <option>East Branch</option>
@@ -330,10 +330,10 @@ export default function ReportsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-2 flex gap-1">
                 <button
                   onClick={handleGenerateReport}
-                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition"
+                  className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-medium transition"
                 >
                   ✓ Apply & Generate
                 </button>
@@ -343,7 +343,7 @@ export default function ReportsPage() {
                     setSelectedProduct('');
                     setShowAdvanced(false);
                   }}
-                  className="px-6 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-medium transition hover:bg-gray-400 dark:hover:bg-gray-500"
+                  className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded text-xs font-medium transition hover:bg-gray-400 dark:hover:bg-gray-500"
                 >
                   Reset Filters
                 </button>
@@ -353,8 +353,8 @@ export default function ReportsPage() {
 
           {/* Filter Summary */}
           {reportGenerated && (selectedSupplier || selectedProduct) && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-4">
-              <p className="text-sm text-blue-800 dark:text-blue-300">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-2 mt-2">
+              <p className="text-xs text-blue-800 dark:text-blue-300">
                 <strong>📋 Report filtered by:</strong>
                 {selectedSupplier && ` Supplier: ${suppliers.find(s => s.id === selectedSupplier)?.name}`}
                 {selectedSupplier && selectedProduct && ' • '}
@@ -365,105 +365,105 @@ export default function ReportsPage() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="card card-standard bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 border-blue-200/50 dark:border-blue-700/30">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+          <div className="card card-compact bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 border-blue-200/50 dark:border-blue-700/30">
             <p className="text-label text-blue-700 dark:text-blue-300">Inventory Value</p>
-            <p className="text-2xl font-bold text-blue-900 dark:text-blue-100 mt-1">{formatCurrency(metrics.totalValue)}</p>
+            <p className="text-lg font-bold text-blue-900 dark:text-blue-100 mt-0.5">{formatCurrency(metrics.totalValue)}</p>
           </div>
 
-          <div className="card card-standard bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 border-green-200/50 dark:border-green-700/30">
+          <div className="card card-compact bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20 border-green-200/50 dark:border-green-700/30">
             <p className="text-label text-green-700 dark:text-green-300">Sales ({dateRange}d)</p>
-            <p className="text-2xl font-bold text-green-900 dark:text-green-100 mt-1">{formatCurrency(salesReport.totalSales)}</p>
-            <p className="text-caption text-green-600 dark:text-green-400 mt-1">{salesReport.totalItems} units</p>
+            <p className="text-lg font-bold text-green-900 dark:text-green-100 mt-0.5">{formatCurrency(salesReport.totalSales)}</p>
+            <p className="text-caption text-green-600 dark:text-green-400 mt-0.5">{salesReport.totalItems} units</p>
           </div>
 
-          <div className="card card-standard bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-orange-200/50 dark:border-orange-700/30">
+          <div className="card card-compact bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-orange-200/50 dark:border-orange-700/30">
             <p className="text-label text-orange-700 dark:text-orange-300">Low Stock</p>
-            <p className="text-2xl font-bold text-orange-900 dark:text-orange-100 mt-1">{metrics.lowStockCount}</p>
-            <p className="text-caption text-orange-600 dark:text-orange-400 mt-1">items to reorder</p>
+            <p className="text-lg font-bold text-orange-900 dark:text-orange-100 mt-0.5">{metrics.lowStockCount}</p>
+            <p className="text-caption text-orange-600 dark:text-orange-400 mt-0.5">items to reorder</p>
           </div>
 
-          <div className="card card-standard bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 border-purple-200/50 dark:border-purple-700/30">
+          <div className="card card-compact bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 border-purple-200/50 dark:border-purple-700/30">
             <p className="text-label text-purple-700 dark:text-purple-300">Turnover Ratio</p>
-            <p className="text-2xl font-bold text-purple-900 dark:text-purple-100 mt-1">{metrics.turnoverRatio.toFixed(2)}x</p>
-            <p className="text-caption text-purple-600 dark:text-purple-400 mt-1">per month</p>
+            <p className="text-lg font-bold text-purple-900 dark:text-purple-100 mt-0.5">{metrics.turnoverRatio.toFixed(2)}x</p>
+            <p className="text-caption text-purple-600 dark:text-purple-400 mt-0.5">per month</p>
           </div>
         </div>
 
         {/* Main Reports Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 grid-spacious">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
           {/* Sales Report */}
-          <div className="card card-standard">
-            <h2 className="heading-section mb-4">📊 Sales by Category</h2>
-            <div className="space-y-4">
+          <div className="card card-compact">
+            <h2 className="heading-section mb-2">📊 Sales by Category</h2>
+            <div className="space-y-2">
               {Object.entries(salesReport.byCategory).length > 0 ? (
                 Object.entries(salesReport.byCategory).map(([category, units]) => (
                   <div key={category}>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-200">{category}</span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{units} units</span>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-xs font-medium text-gray-900 dark:text-gray-200">{category}</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">{units} units</span>
                     </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${(units / salesReport.totalItems) * 100}%` }}></div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                      <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${(units / salesReport.totalItems) * 100}%` }}></div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No sales in selected period</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">No sales in selected period</p>
               )}
             </div>
           </div>
 
           {/* Low Stock Report */}
-          <div className="card card-standard">
-            <h2 className="heading-section mb-4">⚠️ Low Stock ({lowStockReport.length})</h2>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="card card-compact">
+            <h2 className="heading-section mb-2">⚠️ Low Stock ({lowStockReport.length})</h2>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
               {lowStockReport.slice(0, 5).map((p) => (
-                <div key={p.id} className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <div key={p.id} className="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{p.currentStock} units in stock</p>
+                    <p className="text-xs font-medium text-gray-900 dark:text-white">{p.name}</p>
+                    <p className="text-2xs text-gray-600 dark:text-gray-400">{p.currentStock} units in stock</p>
                   </div>
-                  <span className="text-sm font-bold text-red-600 dark:text-red-400">Below {p.reorderLevel}</span>
+                  <span className="text-xs font-bold text-red-600 dark:text-red-400">Below {p.reorderLevel}</span>
                 </div>
               ))}
               {lowStockReport.length > 5 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center pt-2">+{lowStockReport.length - 5} more items</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center pt-1">+{lowStockReport.length - 5} more items</p>
               )}
             </div>
           </div>
 
           {/* Profit Report */}
-          <div className="card card-standard">
-            <h2 className="heading-section mb-4">💰 Top Margins</h2>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="card card-compact">
+            <h2 className="heading-section mb-2">💰 Top Margins</h2>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
               {profitReport.slice(0, 5).map((p) => (
-                <div key={p.id} className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <div key={p.id} className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-900/20 rounded">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Cost: ${p.cost} → Price: ${p.unitPrice}</p>
+                    <p className="text-xs font-medium text-gray-900 dark:text-white">{p.name}</p>
+                    <p className="text-2xs text-gray-600 dark:text-gray-400">Cost: ${p.cost} → Price: ${p.unitPrice}</p>
                   </div>
-                  <span className="text-lg font-bold text-green-600 dark:text-green-400">{p.profitMargin}%</span>
+                  <span className="text-sm font-bold text-green-600 dark:text-green-400">{p.profitMargin}%</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Supplier Performance */}
-          <div className="card card-standard">
-            <h2 className="heading-section mb-4">🚚 Suppliers</h2>
-            <div className="space-y-4">
+          <div className="card card-compact">
+            <h2 className="heading-section mb-2">🚚 Suppliers</h2>
+            <div className="space-y-2">
               {supplierPerformance.slice(0, 3).map((s) => (
-                <div key={s.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex justify-between items-start mb-3">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{s.name}</p>
-                    <div className="flex gap-1">
+                <div key={s.id} className="p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="text-xs font-medium text-gray-900 dark:text-white">{s.name}</p>
+                    <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-lg ${i < Math.round(s.rating) ? '⭐' : '☆'}`}></span>
+                        <span key={i} className={`text-xs ${i < Math.round(s.rating) ? '⭐' : '☆'}`}></span>
                       ))}
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <div className="text-2xs text-gray-600 dark:text-gray-400 space-y-0.5">
                     <p>On-time Delivery: <span className="font-medium">{s.onTimeDelivery}%</span></p>
                     <p>Quality Score: <span className="font-medium">{Math.round(s.qualityScore)}%</span></p>
                   </div>
@@ -473,33 +473,33 @@ export default function ReportsPage() {
           </div>
 
           {/* Inventory Aging */}
-          <div className="lg:col-span-2 card card-standard">
-            <h2 className="heading-section mb-4">📦 Stock Aging</h2>
+          <div className="lg:col-span-2 card card-compact">
+            <h2 className="heading-section mb-2">📦 Stock Aging</h2>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-2xs">
                 <thead>
-                  <tr className="bg-gray-100 dark:bg-gray-700 border-b-2 border-gray-300 dark:border-gray-600">
-                    <th className="px-4 py-3 text-left text-gray-700 dark:text-gray-300 font-semibold">Product Name</th>
-                    <th className="px-4 py-3 text-center text-gray-700 dark:text-gray-300 font-semibold">Current Stock</th>
-                    <th className="px-4 py-3 text-center text-gray-700 dark:text-gray-300 font-semibold">Days in Stock</th>
-                    <th className="px-4 py-3 text-right text-gray-700 dark:text-gray-300 font-semibold">Stock Value</th>
+                  <tr className="bg-gray-100 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600">
+                    <th className="px-2 py-1.5 text-left text-gray-700 dark:text-gray-300 font-semibold">Product Name</th>
+                    <th className="px-2 py-1.5 text-center text-gray-700 dark:text-gray-300 font-semibold">Current Stock</th>
+                    <th className="px-2 py-1.5 text-center text-gray-700 dark:text-gray-300 font-semibold">Days in Stock</th>
+                    <th className="px-2 py-1.5 text-right text-gray-700 dark:text-gray-300 font-semibold">Stock Value</th>
                   </tr>
                 </thead>
                 <tbody>
                   {inventoryAging.map((p) => (
                     <tr key={p.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">{p.name}</td>
-                      <td className="px-4 py-3 text-center text-gray-600 dark:text-gray-400">{p.currentStock} units</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                      <td className="px-2 py-1 text-gray-900 dark:text-white font-medium">{p.name}</td>
+                      <td className="px-2 py-1 text-center text-gray-600 dark:text-gray-400">{p.currentStock}</td>
+                      <td className="px-2 py-1 text-center">
+                        <span className={`px-1.5 py-0.5 rounded text-2xs font-bold ${
                           p.daysInStock > 30
                             ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                             : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                         }`}>
-                          {p.daysInStock} days
+                          {p.daysInStock}d
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-900 dark:text-white font-medium">{formatCurrency(p.currentStock * p.unitPrice)}</td>
+                      <td className="px-2 py-1 text-right text-gray-900 dark:text-white font-medium text-2xs">{formatCurrency(p.currentStock * p.unitPrice)}</td>
                     </tr>
                   ))}
                 </tbody>

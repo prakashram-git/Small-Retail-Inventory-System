@@ -15,59 +15,59 @@
   }
 
   .card-compact {
-    @apply p-4;
+    @apply p-2;
   }
 
   .card-standard {
-    @apply p-5;
+    @apply p-2.5;
   }
 
-  /* Headings */
+  /* Headings - Compact */
   .heading-page {
-    @apply text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white;
+    @apply text-lg sm:text-xl font-bold text-gray-900 dark:text-white;
   }
 
   .heading-section {
-    @apply text-lg font-semibold text-gray-900 dark:text-white;
+    @apply text-sm font-semibold text-gray-900 dark:text-white;
   }
 
   .heading-subsection {
-    @apply text-sm font-medium text-gray-900 dark:text-white;
+    @apply text-xs font-medium text-gray-900 dark:text-white;
   }
 
   /* Text Styles */
   .text-label {
-    @apply text-xs font-medium text-gray-700 dark:text-gray-300;
+    @apply text-2xs font-medium text-gray-700 dark:text-gray-300;
   }
 
   .text-caption {
-    @apply text-xs text-gray-600 dark:text-gray-400;
+    @apply text-2xs text-gray-600 dark:text-gray-400;
   }
 
-  /* Buttons - Professional Standard */
+  /* Buttons - Compact */
   .btn-primary {
-    @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors duration-200 shadow-sm;
+    @apply px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition-colors duration-200 shadow-sm;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors duration-200;
+    @apply px-2 py-1 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-lg text-xs font-medium transition-colors duration-200;
   }
 
   .btn-small {
-    @apply px-3 py-1.5 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-xs font-medium transition-colors duration-200;
+    @apply px-1.5 py-0.5 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded text-2xs font-medium transition-colors duration-200;
   }
 
-  /* Grid Layouts */
+  /* Grid Layouts - Compact */
   .grid-compact {
-    @apply gap-3;
+    @apply gap-1.5;
   }
 
   .grid-standard {
-    @apply gap-4;
+    @apply gap-2;
   }
 
   .grid-spacious {
-    @apply gap-6;
+    @apply gap-3;
   }
 }
 
