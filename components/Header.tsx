@@ -122,12 +122,24 @@ export default function Header() {
 
               {showUserMenu && (
                 <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-48">
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200">
+                  <button
+                    onClick={() => {
+                      router.push('/settings');
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200 transition"
+                  >
                     Profile
-                  </a>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200">
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowSettings(true);
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-200 transition"
+                  >
                     Settings
-                  </a>
+                  </button>
                   <hr className="my-2 border-gray-200 dark:border-gray-700" />
                   <button
                     onClick={handleLogout}
