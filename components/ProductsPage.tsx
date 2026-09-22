@@ -496,7 +496,7 @@ export default function ProductsPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-700 dark:to-gray-600 border-b border-gray-700">
-                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50">
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50">
                     <input
                       type="checkbox"
                       checked={selectedProducts.size === filteredAndSorted.length && filteredAndSorted.length > 0}
@@ -505,24 +505,24 @@ export default function ProductsPage() {
                       title="Select all"
                     />
                   </th>
-                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('sku')}>
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('sku')}>
                     SKU
                   </th>
-                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('name')}>
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('name')}>
                     Product
                   </th>
-                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50">Status</th>
-                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('stock')}>
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50">Status</th>
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('stock')}>
                     Qty
                   </th>
-                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('price')}>
+                  <th className="px-2 py-2 text-right text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('price')}>
                     Price
                   </th>
-                  <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('margin')}>
+                  <th className="px-2 py-2 text-right text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('margin')}>
                     Margin
                   </th>
-                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50">Supplier</th>
-                  <th className="px-4 py-2.5 text-center text-xs font-semibold text-gray-50">Actions</th>
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50">Supplier</th>
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -533,13 +533,13 @@ export default function ProductsPage() {
                   return (
                     <tr
                       key={product.id}
-                      className={`border-b border-gray-100 dark:border-gray-700 text-xs transition hover:bg-blue-50 dark:hover:bg-blue-900/20 ${
+                      className={`border-b border-blue-100 dark:border-gray-600 text-xs transition hover:opacity-75 ${
                         isEvenRow
-                          ? 'bg-white dark:bg-gray-800/50'
-                          : 'bg-gray-50 dark:bg-gray-800'
-                      } ${selectedProducts.has(product.id) ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                          ? 'bg-blue-50 dark:bg-blue-900/10'
+                          : 'bg-gray-100 dark:bg-gray-700/30'
+                      } ${selectedProducts.has(product.id) ? 'bg-blue-200 dark:bg-blue-800/40 ring-1 ring-blue-300 dark:ring-blue-600' : ''}`}
                     >
-                      <td className="px-4 py-2.5 text-center">
+                      <td className="px-2 py-1.5 text-center">
                         <input
                           type="checkbox"
                           checked={selectedProducts.has(product.id)}
@@ -547,23 +547,23 @@ export default function ProductsPage() {
                           className="w-4 h-4 rounded cursor-pointer accent-blue-600"
                         />
                       </td>
-                      <td className="px-4 py-2.5 font-mono text-gray-600 dark:text-gray-400">{product.sku}</td>
-                      <td className="px-4 py-2.5">
-                        <div className="font-medium text-gray-900 dark:text-gray-100">{product.name}</div>
+                      <td className="px-2 py-1.5 font-mono text-gray-600 dark:text-gray-400 whitespace-nowrap">{product.sku}</td>
+                      <td className="px-2 py-1.5">
+                        <div className="font-medium text-gray-900 dark:text-gray-100 truncate">{product.name}</div>
                         {product.description && <div className="text-xs text-gray-500 dark:text-gray-500 line-clamp-1">{product.description}</div>}
                       </td>
-                      <td className="px-4 py-2.5 text-center">{getStockBadge(stockStatus)}</td>
-                      <td className="px-4 py-2.5 text-center font-medium text-gray-900 dark:text-gray-100">{product.currentStock}</td>
-                      <td className="px-4 py-2.5 text-right font-medium text-gray-900 dark:text-gray-100">{formatCurrency(product.unitPrice)}</td>
-                      <td className="px-4 py-2.5 text-right">
+                      <td className="px-2 py-1.5 text-center">{getStockBadge(stockStatus)}</td>
+                      <td className="px-2 py-1.5 text-center font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">{product.currentStock}</td>
+                      <td className="px-2 py-1.5 text-right font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">{formatCurrency(product.unitPrice)}</td>
+                      <td className="px-2 py-1.5 text-right whitespace-nowrap">
                         {product.profitMargin !== undefined ? (
                           <span className="font-medium text-green-600 dark:text-green-400">{product.profitMargin}%</span>
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-center text-gray-600 dark:text-gray-400">{product.supplier || '-'}</td>
-                      <td className="px-4 py-2.5 text-center">
+                      <td className="px-2 py-1.5 text-center text-gray-600 dark:text-gray-400 truncate">{product.supplier || '-'}</td>
+                      <td className="px-2 py-1.5 text-center">
                         <div className="flex gap-2 justify-center">
                           <button
                             type="button"
