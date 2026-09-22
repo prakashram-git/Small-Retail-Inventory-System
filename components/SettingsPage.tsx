@@ -7,7 +7,6 @@ import { Settings, Moon, Sun, Lock, Trash2, Plus, Edit2, CheckCircle, Circle, Lo
 import { UserRole } from '@/lib/types';
 import { Permission, rolePermissions, permissionDescriptions } from '@/lib/permissions';
 import { auditLogger } from '@/lib/audit-logger';
-import DatabaseViewer from '@/components/DatabaseViewer';
 
 export default function SettingsPage() {
   const { settings, updateBrandName, toggleDarkMode, updateShopLocation, updateLoginBackground, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
@@ -493,8 +492,6 @@ export default function SettingsPage() {
             )}
           </div>
 
-          {/* Database Manager */}
-          <DatabaseViewer />
         </div>
       </main>
     </div>
