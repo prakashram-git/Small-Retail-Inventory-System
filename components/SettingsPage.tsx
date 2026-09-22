@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSettingsStore } from '@/lib/settings-store';
 import { useInventoryStore } from '@/lib/store';
-import { Settings, Moon, Sun, Lock, Trash2, Plus, Edit2, CheckCircle, Circle } from 'lucide-react';
+import { Settings, Moon, Sun, Lock, Trash2, Plus, Edit2, CheckCircle, Circle, LogOut, Download, Calendar } from 'lucide-react';
 import { UserRole } from '@/lib/types';
+import { Permission, rolePermissions, permissionDescriptions } from '@/lib/permissions';
+import { auditLogger } from '@/lib/audit-logger';
 import DatabaseViewer from '@/components/DatabaseViewer';
 
 export default function SettingsPage() {
@@ -17,6 +19,16 @@ export default function SettingsPage() {
   const [newUserName, setNewUserName] = useState('');
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserRole, setNewUserRole] = useState<UserRole>('staff');
+  const [showPermissionDetails, setShowPermissionDetails] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole>('admin');
+  const [showAuditLogs, setShowAuditLogs] = useState(false);
+  const [auditFilter, setAuditFilter] = useState<'all' | 'user_management' | 'product_management' | 'security'>('all');
+
+  const auditLogs = useMemo(() => {
+    const logs = auditLogger.getLogs(100);
+    if (auditFilter === 'all') return logs;
+    return logs.filter(log => log.category === auditFilter);
+  }, [auditFilter]);
 
   const handleBrandSave = () => {
     updateBrandName(brandName);
@@ -292,41 +304,193 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* User Privileges Info */}
+          {/* User Privileges Info - Enhanced */}
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 p-6">
-            <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-3 flex items-center gap-2">
-              <Lock className="w-5 h-5" />
-              User Roles & Privileges
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="font-semibold text-blue-900 dark:text-blue-300">Admin</p>
-                <ul className="text-blue-800 dark:text-blue-400 mt-2 space-y-1">
-                  <li>✓ Full system access</li>
-                  <li>✓ Manage users</li>
-                  <li>✓ Edit settings</li>
-                  <li>✓ View reports</li>
-                </ul>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+                <Lock className="w-5 h-5" />
+                Role-Based Access Control (RBAC)
+              </h3>
+              <button
+                onClick={() => setShowPermissionDetails(!showPermissionDetails)}
+                className="text-xs bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition"
+              >
+                {showPermissionDetails ? 'Hide' : 'View'} Details
+              </button>
+            </div>
+
+            {!showPermissionDetails ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                  <p className="font-semibold text-red-700 dark:text-red-400 mb-2">👑 Admin</p>
+                  <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
+                    <li>✓ Full system access</li>
+                    <li>✓ User management</li>
+                    <li>✓ System settings</li>
+                    <li>✓ Audit logs</li>
+                  </ul>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-700 dark:text-blue-400 mb-2">📊 Manager</p>
+                  <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
+                    <li>✓ Inventory management</li>
+                    <li>✓ Analytics & reports</li>
+                    <li>✓ Approve orders</li>
+                    <li>✗ User management</li>
+                  </ul>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+                  <p className="font-semibold text-green-700 dark:text-green-400 mb-2">👤 Staff</p>
+                  <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
+                    <li>✓ Stock updates</li>
+                    <li>✓ Transaction logging</li>
+                    <li>✓ View dashboards</li>
+                    <li>✗ Settings access</li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-blue-900 dark:text-blue-300">Manager</p>
-                <ul className="text-blue-800 dark:text-blue-400 mt-2 space-y-1">
-                  <li>✓ Manage inventory</li>
-                  <li>✓ View analytics</li>
-                  <li>✓ Create reports</li>
-                  <li>✗ Cannot manage users</li>
-                </ul>
+            ) : (
+              <div className="space-y-4">
+                {/* Role Selection */}
+                <div className="flex gap-2 mb-4">
+                  {(['admin', 'manager', 'staff'] as UserRole[]).map(role => (
+                    <button
+                      key={role}
+                      onClick={() => setSelectedRole(role)}
+                      className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+                        selectedRole === role
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Permissions List */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 max-h-96 overflow-y-auto">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                    {selectedRole.toUpperCase()} Permissions ({rolePermissions[selectedRole].length})
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {rolePermissions[selectedRole].map(permission => (
+                      <div key={permission} className="flex items-start gap-2 p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-gray-900 dark:text-white">
+                            {permissionDescriptions[permission]?.name || permission}
+                          </p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            {permissionDescriptions[permission]?.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-blue-900 dark:text-blue-300">Staff</p>
-                <ul className="text-blue-800 dark:text-blue-400 mt-2 space-y-1">
-                  <li>✓ Update stock</li>
-                  <li>✓ Log movements</li>
-                  <li>✗ Cannot edit settings</li>
-                  <li>✗ Limited reports</li>
-                </ul>
+            )}
+          </div>
+
+          {/* Audit Logs */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <LogOut className="w-5 h-5" />
+                Audit Logs & Activity
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const csv = auditLogger.exportLogs('csv');
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `audit-logs-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    addToast('Audit logs downloaded', 'success');
+                  }}
+                  className="flex items-center gap-2 px-3 py-1.5 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </button>
+                <button
+                  onClick={() => setShowAuditLogs(!showAuditLogs)}
+                  className="text-xs bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition"
+                >
+                  {showAuditLogs ? 'Hide' : 'Show'} Logs
+                </button>
               </div>
             </div>
+
+            {showAuditLogs && (
+              <div className="space-y-3">
+                {/* Filter */}
+                <div className="flex gap-2 flex-wrap">
+                  {(['all', 'user_management', 'product_management', 'security'] as const).map(filter => (
+                    <button
+                      key={filter}
+                      onClick={() => setAuditFilter(filter)}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
+                        auditFilter === filter
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      {filter === 'all' ? 'All' : filter.replace('_', ' ').toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Logs Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                        <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-white">Timestamp</th>
+                        <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-white">User</th>
+                        <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-white">Action</th>
+                        <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-white">Entity</th>
+                        <th className="px-3 py-2 text-center font-semibold text-gray-900 dark:text-white">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {auditLogs.slice(0, 50).map(log => (
+                        <tr key={log.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                          <td className="px-3 py-2 text-gray-600 dark:text-gray-400">
+                            {new Date(log.timestamp).toLocaleString()}
+                          </td>
+                          <td className="px-3 py-2 text-gray-900 dark:text-white">
+                            <span className="font-medium">{log.userName}</span>
+                            <br />
+                            <span className="text-xs text-gray-500">{log.userEmail}</span>
+                          </td>
+                          <td className="px-3 py-2 text-gray-900 dark:text-white">{log.action}</td>
+                          <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{log.entity}:{log.entityId}</td>
+                          <td className="px-3 py-2 text-center">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              log.status === 'success'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                            }`}>
+                              {log.status.charAt(0).toUpperCase() + log.status.slice(1)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {auditLogs.length === 0 && (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      No audit logs found
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Database Manager */}
