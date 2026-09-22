@@ -566,17 +566,35 @@ export default function ProductsPage() {
                   <th
                     className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition relative group"
                     onClick={() => setSortField('status')}
-                    title="Click to sort by status"
+                    title="Click to sort by status | Hover for details"
                   >
                     Status
-                    {/* Hover tooltip info */}
-                    <div className="absolute hidden group-hover:block bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-100 text-xs rounded-lg shadow-lg p-3 whitespace-nowrap z-50 pointer-events-none">
-                      <div className="font-semibold mb-1.5">Stock Status Levels:</div>
-                      <div className="space-y-1 text-xs">
-                        <div>🔴 <span className="font-medium">Critical:</span> Below reorder</div>
-                        <div>🟡 <span className="font-medium">Low:</span> Below minimum</div>
-                        <div>🟢 <span className="font-medium">Healthy:</span> Optimal range</div>
-                        <div>🔵 <span className="font-medium">Overstocked:</span> Above maximum</div>
+                    {/* Detailed hover tooltip info */}
+                    <div className="absolute hidden group-hover:block bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-100 rounded-lg shadow-lg p-3 z-50 pointer-events-none whitespace-normal w-80">
+                      <div className="font-semibold mb-2.5 text-sm border-b border-gray-600 pb-2">Stock Status Levels - What They Mean:</div>
+
+                      <div className="mb-2.5 pb-2.5 border-b border-gray-600">
+                        <div className="font-medium text-red-400 text-xs">🔴 CRITICAL</div>
+                        <div className="text-gray-200 text-xs">Stock is BELOW reorder point</div>
+                        <div className="text-gray-400 text-xs mt-1">• Risk of stockout • Urgent reorder needed • May lose sales</div>
+                      </div>
+
+                      <div className="mb-2.5 pb-2.5 border-b border-gray-600">
+                        <div className="font-medium text-yellow-400 text-xs">🟡 LOW</div>
+                        <div className="text-gray-200 text-xs">Stock is below minimum level</div>
+                        <div className="text-gray-400 text-xs mt-1">• Needs attention soon • Plan reorder • Monitor closely</div>
+                      </div>
+
+                      <div className="mb-2.5 pb-2.5 border-b border-gray-600">
+                        <div className="font-medium text-green-400 text-xs">🟢 HEALTHY</div>
+                        <div className="text-gray-200 text-xs">Stock is in optimal range</div>
+                        <div className="text-gray-400 text-xs mt-1">• Between min and max • No action required • Ideal state</div>
+                      </div>
+
+                      <div>
+                        <div className="font-medium text-blue-400 text-xs">🔵 OVERSTOCKED</div>
+                        <div className="text-gray-200 text-xs">Stock exceeds maximum level</div>
+                        <div className="text-gray-400 text-xs mt-1">• Excess inventory • Reduce stock • Risk of waste</div>
                       </div>
                     </div>
                   </th>
