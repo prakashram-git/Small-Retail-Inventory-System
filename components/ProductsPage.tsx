@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { Plus, Trash2, Edit2, Search, ChevronDown, Filter, X } from 'lucide-react';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
+import { generateDefaultSKU } from '@/lib/sku-generator';
 
 type SortField = 'name' | 'sku' | 'stock' | 'price' | 'margin' | 'status';
 type SortOrder = 'asc' | 'desc';
@@ -110,8 +111,8 @@ export default function ProductsPage() {
   }, [products, searchTerm, sortField, sortOrder, filterStatus, getStatusValue]);
 
   const handleAdd = () => {
-    if (!formData.sku || !formData.name) {
-      alert('SKU and Name are required');
+    if (!formData.name) {
+      alert('Product name is required');
       return;
     }
 
@@ -119,7 +120,12 @@ export default function ProductsPage() {
       editProduct(editingId, formData);
       setEditingId(null);
     } else {
-      addProduct(formData);
+      // Auto-generate SKU if not provided
+      const productToAdd = {
+        ...formData,
+        sku: formData.sku && formData.sku.trim() ? formData.sku : generateDefaultSKU(products.length, formData.category),
+      };
+      addProduct(productToAdd);
     }
 
     resetForm();
@@ -356,14 +362,15 @@ export default function ProductsPage() {
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Basic Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">SKU *</label>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">SKU (Optional - Auto-generated)</label>
                     <input
                       type="text"
-                      placeholder="e.g., CHOC-001"
+                      placeholder="Leave empty for auto-generation"
                       value={formData.sku}
                       onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                     />
+                    <p className="text-2xs text-gray-500 dark:text-gray-400 mt-1">SKU will be auto-generated if left blank</p>
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Product Name *</label>

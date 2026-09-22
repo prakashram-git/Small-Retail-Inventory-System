@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Product, StockMovement, Toast, PurchaseOrder, GoodsReceipt, Invoice, Stocktake, Supplier, InventoryMetrics } from './types';
+import { generateDefaultSKU } from './sku-generator';
 
 interface InventoryState {
   // Core Data
@@ -128,14 +129,17 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
   },
 
   addProduct: (product) => {
+    const state = get();
     const newProduct: Product = {
       ...product,
       id: `prod-${Date.now()}`,
+      // Auto-generate SKU if not provided
+      sku: product.sku && product.sku.trim() ? product.sku : generateDefaultSKU(state.products.length, product.category),
     };
     set((state) => ({
       products: [...state.products, newProduct],
     }));
-    get().addToast(`Product added: ${product.name}`, 'success');
+    get().addToast(`Product added: ${product.name} (SKU: ${newProduct.sku})`, 'success');
   },
 
   editProduct: (productId, updates) => {
