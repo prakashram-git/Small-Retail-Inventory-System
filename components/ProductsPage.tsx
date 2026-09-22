@@ -5,7 +5,7 @@ import { Plus, Trash2, Edit2, Search, ChevronDown, Filter, X } from 'lucide-reac
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 
-type SortField = 'name' | 'sku' | 'stock' | 'price' | 'margin';
+type SortField = 'name' | 'sku' | 'stock' | 'price' | 'margin' | 'status';
 type SortOrder = 'asc' | 'desc';
 
 export default function ProductsPage() {
@@ -52,7 +52,7 @@ export default function ProductsPage() {
     });
 
     return filtered.sort((a, b) => {
-      let aVal, bVal;
+      let aVal: string | number, bVal: string | number;
 
       switch (sortField) {
         case 'name':
@@ -75,6 +75,16 @@ export default function ProductsPage() {
           aVal = a.profitMargin || 0;
           bVal = b.profitMargin || 0;
           break;
+        case 'status':
+          const statusOrder = { critical: 0, low: 1, healthy: 2, overstocked: 3 };
+          const aStatus = getStockStatus(a.currentStock, a.minStock, a.maxStock, a.reorderLevel);
+          const bStatus = getStockStatus(b.currentStock, b.minStock, b.maxStock, b.reorderLevel);
+          aVal = statusOrder[aStatus as keyof typeof statusOrder] || 999;
+          bVal = statusOrder[bStatus as keyof typeof statusOrder] || 999;
+          break;
+        default:
+          aVal = 0;
+          bVal = 0;
       }
 
       if (typeof aVal === 'string') {
@@ -511,7 +521,9 @@ export default function ProductsPage() {
                   <th className="px-2 py-2 text-left text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('name')}>
                     Product
                   </th>
-                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50">Status</th>
+                  <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('status')}>
+                    Status
+                  </th>
                   <th className="px-2 py-2 text-center text-xs font-semibold text-gray-50 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-600 transition" onClick={() => setSortField('stock')}>
                     Qty
                   </th>
