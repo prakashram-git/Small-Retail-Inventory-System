@@ -195,6 +195,7 @@ export interface Settings {
   taxRate?: number;
   autoReorderEnabled?: boolean;
   loginBackground?: 'gradient' | 'retail' | 'modern' | 'minimal';
+  loginBackgroundImage?: string;
 }
 
 export interface InventoryMetrics {

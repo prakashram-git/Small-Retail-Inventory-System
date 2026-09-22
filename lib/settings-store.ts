@@ -11,6 +11,8 @@ interface SettingsState {
   toggleDarkMode: () => void;
   updateShopLocation: (location: string) => void;
   updateLoginBackground: (background: 'gradient' | 'retail' | 'modern' | 'minimal') => void;
+  updateLoginBackgroundImage: (imageData: string) => void;
+  clearLoginBackgroundImage: () => void;
 
   // User Management Actions
   addUser: (name: string, email: string, role: UserRole) => void;
@@ -46,6 +48,12 @@ const getInitialLoginBackground = () => {
   return saved ? JSON.parse(saved) : 'gradient';
 };
 
+const getInitialLoginBackgroundImage = () => {
+  if (typeof window === 'undefined') return undefined;
+  const saved = localStorage.getItem('redhill-loginBackgroundImage');
+  return saved || undefined;
+};
+
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   settings: {
     brandName: getInitialBrandName(),
@@ -53,6 +61,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     darkMode: getInitialDarkMode(),
     theme: getInitialDarkMode() ? 'dark' : 'light',
     loginBackground: getInitialLoginBackground(),
+    loginBackgroundImage: getInitialLoginBackgroundImage(),
   },
   users: [],
   currentUser: null,
@@ -97,6 +106,24 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     }
     set((state) => ({
       settings: { ...state.settings, loginBackground: background },
+    }));
+  },
+
+  updateLoginBackgroundImage: (imageData) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('redhill-loginBackgroundImage', imageData);
+    }
+    set((state) => ({
+      settings: { ...state.settings, loginBackgroundImage: imageData },
+    }));
+  },
+
+  clearLoginBackgroundImage: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('redhill-loginBackgroundImage');
+    }
+    set((state) => ({
+      settings: { ...state.settings, loginBackgroundImage: undefined },
     }));
   },
 

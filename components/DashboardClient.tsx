@@ -78,7 +78,7 @@ export default function DashboardClient({ children }: DashboardClientProps) {
   }
 
   if (!isAuthenticated) {
-    return <LoginPage brandName={settings.brandName} shopLocation={settings.shopLocation} />;
+    return <LoginPage />;
   }
 
   return (

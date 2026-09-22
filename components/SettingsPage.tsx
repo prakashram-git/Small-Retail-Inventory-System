@@ -9,7 +9,7 @@ import { Permission, rolePermissions, permissionDescriptions } from '@/lib/permi
 import { auditLogger } from '@/lib/audit-logger';
 
 export default function SettingsPage() {
-  const { settings, updateBrandName, toggleDarkMode, updateShopLocation, updateLoginBackground, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
+  const { settings, updateBrandName, toggleDarkMode, updateShopLocation, updateLoginBackground, updateLoginBackgroundImage, clearLoginBackgroundImage, users, addUser, deleteUser, updateUserRole, toggleUserActive } = useSettingsStore();
   const { addToast } = useInventoryStore();
 
   const [brandName, setBrandName] = useState(settings.brandName);
@@ -22,6 +22,7 @@ export default function SettingsPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole>('admin');
   const [showAuditLogs, setShowAuditLogs] = useState(false);
   const [auditFilter, setAuditFilter] = useState<'all' | 'user_management' | 'product_management' | 'security'>('all');
+  const [backgroundImagePreview, setBackgroundImagePreview] = useState<string | undefined>(settings.loginBackgroundImage);
 
   const auditLogs = useMemo(() => {
     const logs = auditLogger.getLogs(100);
@@ -42,6 +43,31 @@ export default function SettingsPage() {
   const handleDarkModeToggle = () => {
     toggleDarkMode();
     addToast(`${settings.darkMode ? 'Light' : 'Dark'} mode enabled`, 'info');
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      addToast('Image size should be less than 5MB', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imageData = event.target?.result as string;
+      updateLoginBackgroundImage(imageData);
+      setBackgroundImagePreview(imageData);
+      addToast('Background image uploaded successfully', 'success');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleClearImage = () => {
+    clearLoginBackgroundImage();
+    setBackgroundImagePreview(undefined);
+    addToast('Background image removed', 'success');
   };
 
   const handleAddUser = () => {
@@ -121,6 +147,39 @@ export default function SettingsPage() {
                   <option value="minimal">Minimal Clean</option>
                 </select>
                 <p className="text-2xs text-blue-700 dark:text-blue-400 mt-0.5">Choose the background style for login screen</p>
+              </div>
+
+              <div>
+                <label className="block text-2xs font-medium text-blue-900 dark:text-blue-300 mb-1">Custom Background Image</label>
+                <div className="space-y-1.5">
+                  {backgroundImagePreview && (
+                    <div className="relative w-full h-32 rounded-lg border border-blue-200/50 dark:border-blue-700/40 overflow-hidden bg-gray-100 dark:bg-gray-700">
+                      <img
+                        src={backgroundImagePreview}
+                        alt="Background preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        onClick={handleClearImage}
+                        className="absolute top-1 right-1 px-2 py-1 text-2xs bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                  <label className="flex items-center justify-center w-full px-3 py-2 border-2 border-dashed border-blue-200/50 dark:border-blue-700/40 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 hover:border-blue-400 dark:hover:border-blue-600 cursor-pointer transition-colors">
+                    <div className="text-center">
+                      <p className="text-2xs font-medium text-blue-900 dark:text-blue-300">Click to upload image</p>
+                      <p className="text-2xs text-blue-700 dark:text-blue-400">Max 5MB (JPG, PNG, GIF)</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>
