@@ -1,0 +1,6 @@
+id,sku,name,category,currentStock,unitPrice,description,barcode,minStock,maxStock,reorderLevel,cost,supplierId,location,status,profitMargin,lastRestockDate,lastSoldDate,lastCountDate,expiryDate
+1,PRD-001,Laptop Computer,Electronics,15,1299.99,High-performance laptop,1234567890001,5,30,10,899.99,SUP-001,Shelf A1,active,30,2026-09-15,2026-09-20,2026-09-15,
+2,PRD-002,Wireless Mouse,Electronics,45,29.99,Ergonomic wireless mouse,1234567890002,10,100,20,15.00,SUP-001,Shelf A2,active,50,2026-09-10,2026-09-21,2026-09-10,
+3,PRD-003,USB-C Cable,Electronics,120,12.99,1.5m USB-C charging cable,1234567890003,20,200,50,5.00,SUP-002,Shelf A3,active,60,2026-09-05,2026-09-19,2026-09-05,
+4,PRD-004,Desk Chair,Furniture,8,249.99,Ergonomic office chair,1234567890004,2,20,5,150.00,SUP-003,Floor 1,active,35,2026-09-01,2026-09-18,2026-09-01,
+5,PRD-005,Standing Desk,Furniture,3,599.99,Adjustable height standing desk,1234567890005,1,10,3,400.00,SUP-003,Floor 2,active,25,2026-08-25,2026-09-10,2026-08-25,

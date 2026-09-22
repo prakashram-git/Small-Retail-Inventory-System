@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useInventoryStore } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { Search, Download, Eye } from 'lucide-react';
+import { useCSVLoader } from '@/lib/use-csv-loader';
+import { generateCSV, downloadCSV } from '@/lib/csv-handler';
 
 type SortField = 'sku' | 'name' | 'category' | 'stock' | 'price';
 type SortOrder = 'asc' | 'desc';
 
 export default function MasterProductsTable() {
+  useCSVLoader();
   const products = useInventoryStore((state) => state.products);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('sku');
@@ -98,34 +101,8 @@ export default function MasterProductsTable() {
   };
 
   const exportToCSV = () => {
-    const headers = [
-      'SKU',
-      'Product Name',
-      'Category',
-      'Stock Quantity',
-      'Unit Price',
-      'Total Value',
-    ];
-    const rows = filteredProducts.map((p) => [
-      p.sku,
-      p.name,
-      p.category,
-      p.currentStock,
-      p.unitPrice,
-      p.currentStock * p.unitPrice,
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.join(',')),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `master-products-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
+    const csvContent = generateCSV(filteredProducts);
+    downloadCSV(csvContent, `products-${new Date().toISOString().split('T')[0]}.csv`);
   };
 
   const getSortIcon = (field: SortField) => {
