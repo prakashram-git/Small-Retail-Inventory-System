@@ -12,8 +12,10 @@ import SaleModal from '@/components/SaleModal';
 import PurchaseModal from '@/components/PurchaseModal';
 import AdjustModal from '@/components/AdjustModal';
 import Toast from '@/components/Toast';
+import LoginPage from '@/components/LoginPage';
 import { useInventoryStore } from '@/lib/store';
 import { useSettingsStore } from '@/lib/settings-store';
+import { useAuthStore } from '@/lib/auth-store';
 import { formatCurrency } from '@/lib/utils';
 import { usePersistence } from '@/lib/usePersistence';
 
@@ -36,6 +38,7 @@ export default function DashboardClient({ children }: DashboardClientProps) {
   const movements = useInventoryStore((state) => state.movements);
   const updateNotificationBadge = useInventoryStore((state) => state.updateNotificationBadge);
   const { settings } = useSettingsStore();
+  const { isAuthenticated } = useAuthStore();
 
   // Calculate total inventory value from products
   const totalInventoryValue = products.reduce((total, product) => total + product.currentStock * product.unitPrice, 0);
@@ -69,6 +72,14 @@ export default function DashboardClient({ children }: DashboardClientProps) {
       htmlElement.classList.remove('dark');
     }
   }, [settings.darkMode]);
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-gray-50 dark:bg-gray-900" />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage brandName={settings.brandName} shopLocation={settings.shopLocation} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">

@@ -1,19 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { Bell, Settings, ChevronDown, ShoppingCart, BarChart3, Moon, Sun } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Bell, Settings, ChevronDown, ShoppingCart, BarChart3, Moon, Sun, LogOut } from 'lucide-react';
 import { useInventoryStore } from '@/lib/store';
 import { useSettingsStore } from '@/lib/settings-store';
+import { useAuthStore } from '@/lib/auth-store';
 import SettingsModal from './SettingsModal';
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { settings, toggleDarkMode } = useSettingsStore();
   const notificationBadge = useInventoryStore((state) => state.notificationBadge);
+  const { user, logout } = useAuthStore();
 
   useEffect(() => {
     setMounted(true);
@@ -24,6 +27,12 @@ export default function Header() {
     setShowUserMenu(false);
     setShowSettings(false);
   }, [pathname]);
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+    router.push('/');
+  };
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true;
@@ -99,11 +108,15 @@ export default function Header() {
                 className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
               >
                 <div className="w-8 sm:w-10 h-8 sm:h-10 bg-brand-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  A
+                  {mounted && user ? user.name.charAt(0).toUpperCase() : 'A'}
                 </div>
                 <div className="hidden lg:block">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Alex</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Mall Admin</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {mounted && user ? user.name : 'Alex'}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {mounted && user ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Mall Admin'}
+                  </p>
                 </div>
               </button>
 
@@ -116,9 +129,13 @@ export default function Header() {
                     Settings
                   </a>
                   <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-red-600 dark:text-red-400">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-red-600 dark:text-red-400 flex items-center gap-2 transition"
+                  >
+                    <LogOut className="w-4 h-4" />
                     Logout
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
