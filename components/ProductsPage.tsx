@@ -52,43 +52,45 @@ export default function ProductsPage() {
     });
 
     return filtered.sort((a, b) => {
-      let aVal: string | number, bVal: string | number;
+      let aVal: string | number = 0;
+      let bVal: string | number = 0;
 
-      switch (sortField) {
-        case 'name':
-          aVal = a.name;
-          bVal = b.name;
-          break;
-        case 'sku':
-          aVal = a.sku;
-          bVal = b.sku;
-          break;
-        case 'stock':
-          aVal = a.currentStock;
-          bVal = b.currentStock;
-          break;
-        case 'price':
-          aVal = a.unitPrice;
-          bVal = b.unitPrice;
-          break;
-        case 'margin':
-          aVal = a.profitMargin || 0;
-          bVal = b.profitMargin || 0;
-          break;
-        case 'status':
-          const statusOrder = { critical: 0, low: 1, healthy: 2, overstocked: 3 };
-          const aStatus = getStockStatus(a.currentStock, a.minStock, a.maxStock, a.reorderLevel);
-          const bStatus = getStockStatus(b.currentStock, b.minStock, b.maxStock, b.reorderLevel);
-          aVal = statusOrder[aStatus as keyof typeof statusOrder] || 999;
-          bVal = statusOrder[bStatus as keyof typeof statusOrder] || 999;
-          break;
-        default:
-          aVal = 0;
-          bVal = 0;
+      if (sortField === 'status') {
+        const statusOrder: Record<string, number> = { critical: 0, low: 1, healthy: 2, overstocked: 3 };
+        const aStatus = getStockStatus(a.currentStock, a.minStock, a.maxStock, a.reorderLevel);
+        const bStatus = getStockStatus(b.currentStock, b.minStock, b.maxStock, b.reorderLevel);
+        aVal = statusOrder[aStatus] || 999;
+        bVal = statusOrder[bStatus] || 999;
+      } else {
+        switch (sortField) {
+          case 'name':
+            aVal = a.name;
+            bVal = b.name;
+            break;
+          case 'sku':
+            aVal = a.sku;
+            bVal = b.sku;
+            break;
+          case 'stock':
+            aVal = a.currentStock;
+            bVal = b.currentStock;
+            break;
+          case 'price':
+            aVal = a.unitPrice;
+            bVal = b.unitPrice;
+            break;
+          case 'margin':
+            aVal = a.profitMargin || 0;
+            bVal = b.profitMargin || 0;
+            break;
+          default:
+            aVal = 0;
+            bVal = 0;
+        }
       }
 
-      if (typeof aVal === 'string') {
-        return sortOrder === 'asc' ? aVal.localeCompare(bVal as string) : (bVal as string).localeCompare(aVal);
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
       }
       return sortOrder === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
